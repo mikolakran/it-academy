@@ -3,6 +3,7 @@ package org.example.registration.check;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.example.registration.inter.ChangesUserInterface;
+import org.example.registration.inter.CheckUserInterface;
 import org.example.registration.inter.ReadingUser;
 import org.example.registration.json.GetUser;
 import org.json.simple.JSONObject;
@@ -14,6 +15,7 @@ import java.io.*;
 public class ChangesUser implements ChangesUserInterface {
     private boolean exist;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final CheckUserInterface checkUser = new CheckUser();
     public File file;
     public File file2;
 
@@ -26,6 +28,27 @@ public class ChangesUser implements ChangesUserInterface {
     public void changesUserBySelectionTable(String key, String key_table, String table, File file) { //изменяет user по выбор таблицы email,userName,password
         ReadingUser getDateBaseUser = new GetUser(file);
         String text = getDateBaseUser.getUserByKeyTable(key, key_table);
+        if(text!= null) {
+            if (key_table.equals("userName")||key_table.equals("password")){
+                if (checkUser.isValidationPasswordOrUserName(table)!=null){
+
+                    writeUserNameTable(key_table,table,text,file);
+                }else {
+                    writeUserNameTable(key_table,text,text,file);
+                }
+            }else if (key_table.equals("email")){
+                if (checkUser.isValidationEmail(table)!=null){
+                    writeUserNameTable(key_table,table,text,file);
+                }else {
+                    writeUserNameTable(key_table,text,text,file);
+                }
+            }
+        }else {
+            System.out.println("not true user key");
+        }
+    }
+
+    private void writeUserNameTable(String keyTable,String table,String text,File file){
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(this.file));
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file2));
@@ -34,10 +57,9 @@ public class ChangesUser implements ChangesUserInterface {
                 s = bufferedReader.readLine();
                 if (s.contains(text)) {
                     if (!isExist(table)) {
-                        bufferedWriter.write("      " + "\"" + key_table + "\"" + "" + ":" + "\"" + table + "\"" + ",");
+                        bufferedWriter.write("      " + "\"" + keyTable + "\"" + "" + ":" + "\"" + table + "\"" + ",");
                     } else {
-                        bufferedWriter.write("      " + "\"" + key_table + "\"" + "" + ":" + "\"" + text + "\"" + ",");
-                        System.out.println(ChangesUser.class + "= " + "File string exist");
+                        bufferedWriter.write("      " + "\"" + keyTable + "\"" + "" + ":" + "\"" + text + "\"" + ",");
                     }
                 } else {
                     bufferedWriter.write(s);

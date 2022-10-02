@@ -8,7 +8,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 public class GetUser implements ReadingUser {
-    private final User user = new User();
+    private User user = new User();
     public File file;
     private JSONParser jsonParser;
     private JSONObject jsonObject1;
@@ -25,12 +25,17 @@ public class GetUser implements ReadingUser {
              jsonObject1 = (JSONObject) jsonParser.parse(fileReader);
              jsonObject2 = (JSONObject) jsonObject1.get("people");
              jsonObject11 = (JSONObject) jsonObject2.get(key);
-            long id = (long) jsonObject11.get("id");
-            user.setId(id);
-            user.setUsername((String) jsonObject11.get("username"));
-            user.setPassword((String) jsonObject11.get("password"));
-            user.setEmail((String) jsonObject11.get("email"));
-            user.setRole((String) jsonObject11.get("role"));
+             if (jsonObject11!=null) {
+                 long id = (long) jsonObject11.get("id");
+                     user.setId(id);
+                     user.setUserName((String) jsonObject11.get("userName"));
+                     user.setPassword((String) jsonObject11.get("password"));
+                     user.setEmail((String) jsonObject11.get("email"));
+                     user.setRole((String) jsonObject11.get("role"));
+             }else {
+                 System.out.println("user key = "+ key +" not true");
+                 user = new User();
+             }
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -44,7 +49,11 @@ public class GetUser implements ReadingUser {
             jsonObject1 = (JSONObject) jsonParser.parse(fileReader);
             jsonObject2 = (JSONObject) jsonObject1.get("people");
             jsonObject11 = (JSONObject) jsonObject2.get(key);
-            setUserTable(table);
+            if(jsonObject11!=null) {
+                setUserTable(table);
+            }else {
+                System.out.println("user key not true");
+            }
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -67,8 +76,8 @@ public class GetUser implements ReadingUser {
     private String setStringUserTable(String table) {
         String table2 = null;
         switch (table) {
-            case "username":
-                table2 = user.getUsername();
+            case "userName":
+                table2 = user.getUserName();
                 break;
             case "password":
                 table2 = user.getPassword();
@@ -85,8 +94,8 @@ public class GetUser implements ReadingUser {
 
     private void setUserTable(String table) {
         switch (table) {
-            case "username":
-                user.setUsername((String) jsonObject11.get(table));
+            case "userName":
+                user.setUserName((String) jsonObject11.get(table));
                 break;
             case "password":
                 user.setPassword((String) jsonObject11.get(table));

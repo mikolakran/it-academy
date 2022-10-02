@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class User {
     private long id;
-    private String username;
+    private String userName;
     private String password;
     private String email;
     private String role;
@@ -14,18 +14,18 @@ public class User {
 
     public User(long id, String username, String password, String email, String role) {
         this.id = id;
-        this.username = username;
+        this.userName = username;
         this.password = password;
         this.email = email;
         this.role = role;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -64,7 +64,7 @@ public class User {
     public String toString() {
         return "    \""+id+"\" : {\n" +
                 "      \"id\" : \""+id+"\"\n" +
-                "      \"username\" : \""+username+"\"\n" +
+                "      \"userName\" : \""+ userName +"\"\n" +
                 "      \"password\" : \""+password+"\"\n" +
                 "      \"email\" : \""+email+"\"\n" +
                 "      \"role\" : \""+role+"\"\n" +
@@ -79,7 +79,7 @@ public class User {
         User user = (User) o;
 
         if (id != user.id) return false;
-        if (!Objects.equals(username, user.username)) return false;
+        if (!Objects.equals(userName, user.userName)) return false;
         if (!Objects.equals(password, user.password)) return false;
         if (!Objects.equals(email, user.email)) return false;
         return Objects.equals(role, user.role);
@@ -88,7 +88,7 @@ public class User {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (userName != null ? userName.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);

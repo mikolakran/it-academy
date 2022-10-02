@@ -1,32 +1,25 @@
 {
   "people" : {
-    "2" : {
-      "password" : "nik3wqdf",
-      "role" : "user1",
-      "id" : 2,
-      "email" : "test2@gmail.com",
-      "username" : "nikolai2"
-    },
     "4" : {
       "password" : "nik43qrd",
       "role" : "user3",
       "id" : 4,
-      "email" : "test4@gmail.com",
-      "username" : "nikolai4"
+      "userName" : "nikolai4",
+      "email" : "test4@gmail.com"
     },
-    "6" : {
-      "password" : "nik4f43",
-      "role" : "user5",
-      "id" : 6,
-      "email" : "test6@gmail.com",
-      "username" : "nikolai6"
+    "5" : {
+      "password" : "nik512e",
+      "role" : "user4",
+      "id" : 5,
+      "userName" : "nikolai2",
+      "email" : "test5@gmail.com"
     },
     "8" : {
       "password" : "nik8d43",
       "role" : "user7",
       "id" : 8,
-      "email" : "test8@gmail.com",
-      "username" : "nikolai8"
+      "userName" : "nikolai8",
+      "email" : "test8@gmail.com"
     }
   }
 }

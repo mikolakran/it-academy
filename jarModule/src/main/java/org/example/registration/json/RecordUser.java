@@ -28,9 +28,11 @@ public class RecordUser implements WriteFileUser {
 
     @Override
     public void writeUser(User user) {
-        if (user.getUsername().equals(user.getPassword())){
+        if (user.getUserName().equals(user.getPassword())){
             checkUser.setExistUser(true);
+            System.out.println("userName and password same id = "+user.getId());
         }
+
         if (!checkUser.IsExistUser(user,list,count,file)){ //проверка на совпадение userName,email,password
             count++;
             jsonObject.put(user.getId(),user);
@@ -44,7 +46,6 @@ public class RecordUser implements WriteFileUser {
             }
         }else {
             checkUser.setExistUser(false);
-            System.out.println("user exist");
         }
     }
 }
