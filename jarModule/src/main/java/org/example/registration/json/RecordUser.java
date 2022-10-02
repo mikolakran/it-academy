@@ -3,8 +3,8 @@ package org.example.registration.json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.example.registration.check.CheckUser;
-import org.example.registration.inter.CheckUser_inter;
-import org.example.registration.inter.SetDateBaseUser;
+import org.example.registration.inter.CheckUserInterface;
+import org.example.registration.inter.WriteFileUser;
 import org.example.registration.user.User;
 import org.json.simple.JSONObject;
 
@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecordJson implements SetDateBaseUser {
+public class RecordUser implements WriteFileUser {
 
     private final JSONObject jsonObject = new JSONObject();
     private final JSONObject jsonObject1 = new JSONObject();
@@ -20,18 +20,18 @@ public class RecordJson implements SetDateBaseUser {
    public File file;
     private int count = 0;
     private final List<String> list = new ArrayList<>();
-    private final CheckUser_inter checkUser = new CheckUser();
+    private final CheckUserInterface checkUser = new CheckUser();
 
-    public RecordJson(File file) {
+    public RecordUser(File file) {
         this.file = file;
     }
 
     @Override
-    public void set_all_date_base(User user) {
+    public void writeUser(User user) {
         if (user.getUsername().equals(user.getPassword())){
-            checkUser.setExist(true);
+            checkUser.setExistUser(true);
         }
-        if (!checkUser.exist_user(user,list,count,file)){
+        if (!checkUser.IsExistUser(user,list,count,file)){ //проверка на совпадение userName,email,password
             count++;
             jsonObject.put(user.getId(),user);
             list.add(String.valueOf(user.getId()));
@@ -43,9 +43,8 @@ public class RecordJson implements SetDateBaseUser {
                 throw new RuntimeException(e);
             }
         }else {
-            checkUser.setExist(false);
+            checkUser.setExistUser(false);
             System.out.println("user exist");
         }
     }
-
 }

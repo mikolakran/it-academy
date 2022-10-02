@@ -27,13 +27,6 @@
       "id" : 8,
       "email" : "test8@gmail.com",
       "username" : "nikolai8"
-    },
-    "9" : {
-      "password" : "nik92d3",
-      "role" : "user8",
-      "id" : 9,
-      "email" : "test9@gmail.com",
-      "username" : "nikolai9"
     }
   }
 }

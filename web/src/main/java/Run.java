@@ -1,10 +1,10 @@
 
 import org.example.registration.check.ChangesUser;
-import org.example.registration.inter.ChangesUser_inter;
-import org.example.registration.inter.GetDateBaseUser;
-import org.example.registration.inter.SetDateBaseUser;
-import org.example.registration.json.ReadingJson;
-import org.example.registration.json.RecordJson;
+import org.example.registration.inter.ChangesUserInterface;
+import org.example.registration.inter.ReadingUser;
+import org.example.registration.inter.WriteFileUser;
+import org.example.registration.json.GetUser;
+import org.example.registration.json.RecordUser;
 import org.example.registration.user.User;
 
 import java.io.File;
@@ -23,26 +23,27 @@ public class Run {
         User user6 = new User(6, "nikolai6", "nik4f43", "test6@gmail.com", "user5");
         User user7 = new User(7, "nik43rdad", "nik43rdad", "test7@gmail.com", "user6");//-pass + user
         User user8 = new User(8, "nikolai8", "nik8d43", "test8@gmail.com", "user7");
-        User user9 = new User(9, "nikolai9", "nik92d3", "test9@gmail.com", "user8");
-        SetDateBaseUser recordJson = new RecordJson(file);
-        recordJson.set_all_date_base(user1);
-        recordJson.set_all_date_base(user2);
-        recordJson.set_all_date_base(user3);
-        recordJson.set_all_date_base(user4);
-        recordJson.set_all_date_base(user5);
-        recordJson.set_all_date_base(user6);
-        recordJson.set_all_date_base(user7);
-        recordJson.set_all_date_base(user8);
-        recordJson.set_all_date_base(user9);
+        User user9 = new User(9, "nikolai9", "nik92d3", "test8@gmail.com", "user8");//-email 8-9
+        WriteFileUser writeFileUser = new RecordUser(file);
+        writeFileUser.writeUser(user1);
+        writeFileUser.writeUser(user2);
+        writeFileUser.writeUser(user3);
+        writeFileUser.writeUser(user4);
+        writeFileUser.writeUser(user5);
+        writeFileUser.writeUser(user6);
+        writeFileUser.writeUser(user7);
+        writeFileUser.writeUser(user8);
+        writeFileUser.writeUser(user9);
 
-        GetDateBaseUser setDateBase = new ReadingJson(file);
-        System.out.println(setDateBase.get_user_date_base("1")); // user
-        System.out.println(setDateBase.get_user_date_base("3"));// user
-        System.out.println(setDateBase.get_all_json_date_base());// json
-        ChangesUser_inter changesUser_inter = new ChangesUser(file,file2);
-        changesUser_inter.changes_user("3","username","Sewza",file);//user changes
-        System.out.println(setDateBase.get_user_date_base("3"));//
-        changesUser_inter.changes_all_user("1",file);//user delete
-        changesUser_inter.changes_all_user("3",file);//user delete
+        ReadingUser readingUser = new GetUser(file);
+        System.out.println(readingUser.getUserByKey("1")); // достаю user по key
+        System.out.println(readingUser.getUserByKey("3"));// достаю user по key
+        System.out.println(readingUser.getAllUser());// достаю всех users
+        ChangesUserInterface changesUser = new ChangesUser(file,file2);
+        changesUser.changesUserBySelectionTable("3","username","Sewza",file);//изменяю email,password,userName по выбору таблицы
+        System.out.println(readingUser.getUserByKey("3"));//достаю user по key
+        changesUser.deleteUserByKey("1",file);//user delete
+        changesUser.deleteUserByKey("3",file);//user delete
+        System.out.println(readingUser.getAllUser());// достаю всех users
     }
 }

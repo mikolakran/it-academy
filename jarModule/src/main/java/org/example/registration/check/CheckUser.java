@@ -1,8 +1,8 @@
 package org.example.registration.check;
 
-import org.example.registration.inter.CheckUser_inter;
-import org.example.registration.inter.GetDateBaseUser;
-import org.example.registration.json.ReadingJson;
+import org.example.registration.inter.CheckUserInterface;
+import org.example.registration.inter.ReadingUser;
+import org.example.registration.json.GetUser;
 import org.example.registration.user.User;
 import org.json.simple.JSONObject;
 
@@ -10,13 +10,14 @@ import java.io.File;
 import java.util.List;
 
 
-public class CheckUser implements CheckUser_inter {
+public class CheckUser implements CheckUserInterface {
     private boolean exist = false;
+    /*Check User на совпадение*/
     @Override
-    public boolean exist_user(User user, List<String> id, int count, File file) {
-        GetDateBaseUser readingJson = new ReadingJson(file);
-        if (readingJson.get_all_json_date_base()!=null && !exist) {
-            JSONObject jsonObject2 = readingJson.get_all_json_date_base();
+    public boolean IsExistUser(User user, List<String> id, int count, File file) {
+        ReadingUser readingJson = new GetUser(file);
+        if (readingJson.getAllUser()!=null && !exist) {
+            JSONObject jsonObject2 = readingJson.getAllUser();
             JSONObject jsonObject3 = (JSONObject) jsonObject2.get("people");
             JSONObject jsonObject4;
 
@@ -36,7 +37,7 @@ public class CheckUser implements CheckUser_inter {
     }
 
     @Override
-    public void setExist(boolean exist) {
+    public void setExistUser(boolean exist) {
         this.exist = exist;
     }
 

@@ -1,25 +1,25 @@
 package org.example.registration.json;
 
-import org.example.registration.inter.GetDateBaseUser;
+import org.example.registration.inter.ReadingUser;
 import org.example.registration.user.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
-public class ReadingJson implements GetDateBaseUser {
+public class GetUser implements ReadingUser {
     private final User user = new User();
     public File file;
     private JSONParser jsonParser;
     private JSONObject jsonObject1;
     private JSONObject jsonObject2;
     private JSONObject jsonObject11;
-    public ReadingJson(File file) {
+    public GetUser(File file) {
         this.file = file;
     }
 
     @Override
-    public User get_user_date_base(String key) {
+    public User getUserByKey(String key) { // достаю user по id key
          jsonParser = new JSONParser();
         try (FileReader fileReader = new FileReader(file)){
              jsonObject1 = (JSONObject) jsonParser.parse(fileReader);
@@ -38,21 +38,21 @@ public class ReadingJson implements GetDateBaseUser {
     }
 
     @Override
-    public String get_user_table_date_base(String key, String table) {
+    public String getUserByKeyTable(String key, String table) { // достаю user по id key и name table
         jsonParser = new JSONParser();
         try (FileReader fileReader = new FileReader(file)){
             jsonObject1 = (JSONObject) jsonParser.parse(fileReader);
             jsonObject2 = (JSONObject) jsonObject1.get("people");
             jsonObject11 = (JSONObject) jsonObject2.get(key);
-            set_user_table(table);
+            setUserTable(table);
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
-        return set_string_user_table(table);
+        return setStringUserTable(table);
     }
 
     @Override
-    public JSONObject get_all_json_date_base() {
+    public JSONObject getAllUser() { //достаю всех user
         jsonParser = new JSONParser();
         try {
             FileReader fileReader = new FileReader(file);
@@ -64,7 +64,7 @@ public class ReadingJson implements GetDateBaseUser {
         }
         return jsonObject1;
     }
-    private String set_string_user_table(String table) {
+    private String setStringUserTable(String table) {
         String table2 = null;
         switch (table) {
             case "username":
@@ -83,7 +83,7 @@ public class ReadingJson implements GetDateBaseUser {
         return table2;
     }
 
-    private void set_user_table(String table) {
+    private void setUserTable(String table) {
         switch (table) {
             case "username":
                 user.setUsername((String) jsonObject11.get(table));

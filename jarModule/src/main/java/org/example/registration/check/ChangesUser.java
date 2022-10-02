@@ -2,16 +2,16 @@ package org.example.registration.check;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.example.registration.inter.ChangesUser_inter;
-import org.example.registration.inter.GetDateBaseUser;
-import org.example.registration.json.ReadingJson;
+import org.example.registration.inter.ChangesUserInterface;
+import org.example.registration.inter.ReadingUser;
+import org.example.registration.json.GetUser;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
 
-public class ChangesUser implements ChangesUser_inter {
+public class ChangesUser implements ChangesUserInterface {
     private boolean exist;
     private final ObjectMapper objectMapper = new ObjectMapper();
     public File file;
@@ -23,9 +23,9 @@ public class ChangesUser implements ChangesUser_inter {
     }
 
     @Override
-    public void changes_user(String key, String key_table, String table,File file) {
-        GetDateBaseUser getDateBaseUser = new ReadingJson(file);
-        String text = getDateBaseUser.get_user_table_date_base(key, key_table);
+    public void changesUserBySelectionTable(String key, String key_table, String table, File file) { //изменяет user по выбор таблицы email,userName,password
+        ReadingUser getDateBaseUser = new GetUser(file);
+        String text = getDateBaseUser.getUserByKeyTable(key, key_table);
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(this.file));
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file2));
@@ -54,7 +54,7 @@ public class ChangesUser implements ChangesUser_inter {
         }
     }
     @Override
-    public void changes_all_user(String key,File file){
+    public void deleteUserByKey(String key, File file){
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject ;
         try {
@@ -62,7 +62,6 @@ public class ChangesUser implements ChangesUser_inter {
             JSONObject jsonObject1 = (JSONObject) jsonObject.get("people");
             JSONObject jsonObject2 = (JSONObject) jsonObject1.remove(key);
             jsonObject.remove(jsonObject2);
-            System.out.println(jsonObject);
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             objectMapper.writeValue(this.file,jsonObject);
         } catch (IOException | ParseException e) {
