@@ -1,0 +1,25 @@
+{
+  "people" : {
+    "4" : {
+      "password" : "nik43qrd",
+      "role" : "user3",
+      "id" : 4,
+      "userName" : "nikolai4",
+      "email" : "test4@gmail.com"
+    },
+    "5" : {
+      "password" : "nik512e",
+      "role" : "user4",
+      "id" : 5,
+      "userName" : "nikolai2",
+      "email" : "test5@gmail.com"
+    },
+    "8" : {
+      "password" : "nik8d43",
+      "role" : "user7",
+      "id" : 8,
+      "userName" : "nikolai8",
+      "email" : "test8@gmail.com"
+    }
+  }
+}
