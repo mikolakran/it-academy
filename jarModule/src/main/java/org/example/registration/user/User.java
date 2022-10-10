@@ -60,17 +60,16 @@ public class User {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "    \""+id+"\" : {\n" +
-                "      \"id\" : \""+id+"\"\n" +
-                "      \"userName\" : \""+ userName +"\"\n" +
-                "      \"password\" : \""+password+"\"\n" +
-                "      \"email\" : \""+email+"\"\n" +
-                "      \"role\" : \""+role+"\"\n" +
-                "    },";
-    }
-
+       @Override
+        public String toString() {
+            return "    \""+id+"\" : {\n" +
+                    "      \"id\" : \""+id+"\"\n" +
+                    "      \"userName\" : \""+ userName +"\"\n" +
+                    "      \"password\" : \""+password+"\"\n" +
+                    "      \"email\" : \""+email+"\"\n" +
+                    "      \"role\" : \""+role+"\"\n" +
+                    "    },";
+        }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

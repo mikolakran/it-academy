@@ -8,4 +8,6 @@ public interface ReadingUser {
     String getUserByKeyTable(String key, String user_table);
     JSONObject getAllUser();
 
+    long getIdMax(JSONObject allUser);
+
 }

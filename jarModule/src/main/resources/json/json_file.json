@@ -1,25 +1,39 @@
 {
   "people" : {
+    "1" : {
+      "password" : "ytgfrdgdgde",
+      "role" : "admin",
+      "id" : 1,
+      "userName" : "radfast",
+      "email" : "mikolakran@gmail.com"
+    },
+    "2" : {
+      "password" : "yttvdawadsadsa",
+      "role" : "user",
+      "id" : 2,
+      "userName" : "radfast1",
+      "email" : "nikolai1@mail.ru"
+    },
+    "3" : {
+      "password" : "ytfhthfythf",
+      "role" : "user",
+      "id" : 3,
+      "userName" : "radfast2",
+      "email" : "nikolai2@mail.ru"
+    },
     "4" : {
-      "password" : "nik43qrd",
-      "role" : "user3",
+      "password" : "ytdasasd",
+      "role" : "user",
       "id" : 4,
-      "userName" : "nikolai4",
-      "email" : "test4@gmail.com"
+      "userName" : "radfast3",
+      "email" : "nikolai3@mail.ru"
     },
     "5" : {
-      "password" : "nik512e",
-      "role" : "user4",
+      "password" : "yttvdsagv",
+      "role" : "user",
       "id" : 5,
-      "userName" : "nikolai2",
-      "email" : "test5@gmail.com"
-    },
-    "8" : {
-      "password" : "nik8d43",
-      "role" : "user7",
-      "id" : 8,
-      "userName" : "nikolai8",
-      "email" : "test8@gmail.com"
+      "userName" : "radfast4",
+      "email" : "nikolai4@mail.ru"
     }
   }
 }

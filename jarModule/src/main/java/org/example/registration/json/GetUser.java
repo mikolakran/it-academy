@@ -14,6 +14,7 @@ public class GetUser implements ReadingUser {
     private JSONObject jsonObject1;
     private JSONObject jsonObject2;
     private JSONObject jsonObject11;
+    private long idGetKey;
     public GetUser(File file) {
         this.file = file;
     }
@@ -33,7 +34,6 @@ public class GetUser implements ReadingUser {
                      user.setEmail((String) jsonObject11.get("email"));
                      user.setRole((String) jsonObject11.get("role"));
              }else {
-                 System.out.println("user key = "+ key +" not true");
                  user = new User();
              }
         } catch (IOException | ParseException e) {
@@ -51,8 +51,6 @@ public class GetUser implements ReadingUser {
             jsonObject11 = (JSONObject) jsonObject2.get(key);
             if(jsonObject11!=null) {
                 setUserTable(table);
-            }else {
-                System.out.println("user key not true");
             }
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
@@ -69,9 +67,22 @@ public class GetUser implements ReadingUser {
                 jsonObject1.get("people");
                 fileReader.close();
         } catch (ParseException | IOException e) {
-            System.out.println("null");
+            System.out.println("null base");
         }
         return jsonObject1;
+    }
+
+    public long getIdMax(JSONObject allUser) {
+        JSONObject jsonObject3 = (JSONObject) allUser.get("people");
+        for (long i = 1; i < 100; i++) {
+            String idKey = String.valueOf(i);
+            JSONObject jsonObject4 = (JSONObject) jsonObject3.get(idKey);
+            if (jsonObject4 != null) {
+                Object o1 = jsonObject4.get("id");
+                idGetKey = (long) o1;
+            }
+        }
+        return idGetKey;
     }
     private String setStringUserTable(String table) {
         String table2 = null;
