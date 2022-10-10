@@ -10,9 +10,9 @@ import jakarta.servlet.http.HttpSession;
 import org.example.registration.inter.exception.LoginException;
 import org.example.registration.inter.WriteFileUser;
 import org.example.registration.json.RecordUser;
+import org.example.registration.properties.PropertiesFileRegistration;
 import org.example.registration.user.User;
 
-import java.io.File;
 import java.io.IOException;
 
 @WebServlet(name = "RegistrationServlet",
@@ -20,8 +20,7 @@ import java.io.IOException;
 public class RegistrationServlet extends HttpServlet {
     private int count = 1;
     private String role;
-    private final File file = new File("C:/Users/mikol/it-academy/jarModule/src/main/resources/json/json_file.json");
-    private final WriteFileUser writeFileUser = new RecordUser(file);
+    private final WriteFileUser writeFileUser = new RecordUser(PropertiesFileRegistration.getProperties());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

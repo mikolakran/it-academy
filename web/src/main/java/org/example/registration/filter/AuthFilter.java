@@ -10,16 +10,15 @@ import org.example.registration.inter.CheckUserInterface;
 import org.example.registration.inter.ReadingUser;
 import org.example.registration.inter.exception.LoginException;
 import org.example.registration.json.GetUser;
+import org.example.registration.properties.PropertiesFileRegistration;
 import org.example.registration.user.User;
 import org.json.simple.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 
 
 @WebFilter(servletNames = {"Home", "RegistrationServlet"})
 public class AuthFilter implements Filter {
-    private final File file = new File("C:/Users/mikol/it-academy/jarModule/src/main/resources/json/json_file.json");
     private User user;
 
 
@@ -31,7 +30,7 @@ public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         CheckUserInterface checkUser = new CheckUser();
-        ReadingUser readingUser = new GetUser(file);
+        ReadingUser readingUser = new GetUser(PropertiesFileRegistration.getProperties());
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         isUserInJson(checkUser, request);
         HttpSession session = request.getSession();
@@ -74,11 +73,13 @@ public class AuthFilter implements Filter {
         user = new User();
         user.setUserName(request.getParameter("userName"));
         user.setPassword(request.getParameter("password"));
+        String pass = request.getParameter("password2");
         user.setEmail(request.getParameter("email"));
         try {
-            checkUser.isValidationPasswordOrUserName(user.getUserName());
-            checkUser.isValidationPasswordOrUserName(user.getPassword());
-            checkUser.IsExistUser(user, file);
+            checkUser.isPassAndPass(user.getPassword(), pass);
+            checkUser.isValidationUserName(user.getUserName());
+            checkUser.isValidationPassword(user.getPassword());
+            checkUser.IsExistUser(user, PropertiesFileRegistration.getProperties());
         } catch (LoginException e) {
             String error = String.valueOf(e.getMessage());
             request.setAttribute("error", error);

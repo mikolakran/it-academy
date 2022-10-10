@@ -7,18 +7,16 @@ import org.example.registration.check.ChangesUser;
 import org.example.registration.inter.ChangesUserInterface;
 import org.example.registration.inter.ReadingUser;
 import org.example.registration.json.GetUser;
+import org.example.registration.properties.PropertiesFileRegistration;
 import org.example.registration.user.User;
 import org.json.simple.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @WebFilter(servletNames = {"Users"})
 public class FilterUsers implements Filter {
-    private final File file = new File("C:/Users/mikol/it-academy/jarModule/src/main/resources/json/json_file.json");
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -29,9 +27,9 @@ public class FilterUsers implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         List<User> list = new ArrayList<>();
         String idKey1 = request.getParameter("id");
-        ChangesUserInterface changesUser = new ChangesUser(file);
-        changesUser.deleteUserByKey(idKey1, file);
-        ReadingUser readingUser = new GetUser(file);
+        ChangesUserInterface changesUser = new ChangesUser(PropertiesFileRegistration.getProperties());
+        changesUser.deleteUserByKey(idKey1, PropertiesFileRegistration.getProperties());
+        ReadingUser readingUser = new GetUser(PropertiesFileRegistration.getProperties());
         JSONObject allUser = readingUser.getAllUser();
         JSONObject jsonObject = (JSONObject) allUser.get("people");
         for (int i = 0; i < 100; i++) {

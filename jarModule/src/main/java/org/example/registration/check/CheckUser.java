@@ -54,6 +54,7 @@ public class CheckUser implements CheckUserInterface {
         }
         return exist;
     }
+
     @Override
     public void IsExistUserUserName(User user, File file) throws LoginException {
         ReadingUser readingJson = new GetUser(file);
@@ -78,6 +79,7 @@ public class CheckUser implements CheckUserInterface {
             }
         }
     }
+
     @Override
     public void IsExistUserPassword(User user, File file) throws LoginException {
         ReadingUser readingJson = new GetUser(file);
@@ -102,6 +104,7 @@ public class CheckUser implements CheckUserInterface {
             }
         }
     }
+
     @Override
     public void IsExistUserEmail(User user, File file) throws LoginException {
         ReadingUser readingJson = new GetUser(file);
@@ -134,14 +137,34 @@ public class CheckUser implements CheckUserInterface {
 
 
     @Override
-    public void isValidationPasswordOrUserName(String passOrUserName) throws LoginException {
-        Pattern pattern = Pattern.compile("^[\\w\\S]{3,16}");
+    public void isValidationPassword(String passOrUserName) throws LoginException {
+        Pattern pattern = Pattern.compile("(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}");
         if (passOrUserName != null) {
             Matcher matcher = pattern.matcher(passOrUserName);
             if (matcher.find()) {
                 passOrUserName = matcher.group();
             } else {
-                throw new LoginException("Password or userName is not valid");
+                throw new LoginException("Password is not valid example: w$#$IU7caamq or *s9C#nFSNx#A");
+            }
+        }
+    }
+
+    public void isPassAndPass(String pass, String pass2) throws LoginException {
+        if (pass != null && pass2 != null) {
+            if (!pass.equals(pass2)) {
+                throw new LoginException("passwords do not match");
+            }
+        }
+    }
+
+    public void isValidationUserName(String passOrUserName) throws LoginException {
+        Pattern pattern = Pattern.compile("[a-zA-Z][a-zA-Z0-9-_\\.]{3,16}");
+        if (passOrUserName != null) {
+            Matcher matcher = pattern.matcher(passOrUserName);
+            if (matcher.find()) {
+                passOrUserName = matcher.group();
+            } else {
+                throw new LoginException("Name is not valid example: rad2fas22");
             }
         }
     }

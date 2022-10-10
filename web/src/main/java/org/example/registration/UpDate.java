@@ -15,15 +15,13 @@ import org.example.registration.inter.CheckUserInterface;
 import org.example.registration.inter.ReadingUser;
 import org.example.registration.inter.exception.LoginException;
 import org.example.registration.json.GetUser;
+import org.example.registration.properties.PropertiesFileRegistration;
 import org.example.registration.user.User;
 
-
-import java.io.File;
 import java.io.IOException;
 @WebServlet(name = "UpDate",
 urlPatterns = "/upDate")
 public class UpDate extends HttpServlet {
-    private final File file = new File("C:/Users/mikol/it-academy/jarModule/src/main/resources/json/json_file.json");
     private String idKey = null;
 
     @Override
@@ -37,8 +35,8 @@ public class UpDate extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ChangesUserInterface changesUser = new ChangesUser(file);
-        ReadingUser readingUser = new GetUser(file);
+        ChangesUserInterface changesUser = new ChangesUser(PropertiesFileRegistration.getProperties());
+        ReadingUser readingUser = new GetUser(PropertiesFileRegistration.getProperties());
         CheckUserInterface checkUser = new CheckUser();
         HttpSession session = req.getSession();
         User user1 = (User) session.getAttribute("user");
@@ -49,27 +47,29 @@ public class UpDate extends HttpServlet {
         String name = req.getParameter("userName");
         String email = req.getParameter("email");
         String pass = req.getParameter("password");
+        String pass2 = req.getParameter("password2");
         User user ;
         user = readingUser.getUserByKey(idKey);
         if (user !=null){
             try {
+                checkUser.isPassAndPass(pass,pass2);
                 if (!user.getUserName().equals(name)){
-                    checkUser.isValidationPasswordOrUserName(name);
+                    checkUser.isValidationUserName(name);
                     user.setUserName(name);
-                    checkUser.IsExistUserUserName(user,file);
-                    changesUser.changesUserBySelectionTable(String.valueOf(user.getId()),"userName", name,file);
+                    checkUser.IsExistUserUserName(user,PropertiesFileRegistration.getProperties());
+                    changesUser.changesUserBySelectionTable(String.valueOf(user.getId()),"userName", name,PropertiesFileRegistration.getProperties());
                 }
                 if (!user.getPassword().equals(pass)){
-                    checkUser.isValidationPasswordOrUserName(pass);
+                    checkUser.isValidationPassword(pass);
                     user.setPassword(pass);
-                    checkUser.IsExistUserPassword(user,file);
-                    changesUser.changesUserBySelectionTable(idKey,"password", pass, file);
+                    checkUser.IsExistUserPassword(user,PropertiesFileRegistration.getProperties());
+                    changesUser.changesUserBySelectionTable(idKey,"password", pass, PropertiesFileRegistration.getProperties());
                 }
                 if (!user.getEmail().equals(email)){
                     checkUser.isValidationEmail(email);
                     user.setEmail(email);
-                    checkUser.IsExistUserEmail(user,file);
-                    changesUser.changesUserBySelectionTable(idKey,"email", email, file);
+                    checkUser.IsExistUserEmail(user,PropertiesFileRegistration.getProperties());
+                    changesUser.changesUserBySelectionTable(idKey,"email", email, PropertiesFileRegistration.getProperties());
                 }
             } catch (LoginException e) {
                 String error = String.valueOf(e.getMessage());

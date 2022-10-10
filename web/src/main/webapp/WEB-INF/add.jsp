@@ -49,6 +49,11 @@
                     <i class="fa fa-lock"></i>
                     <a href="#" class="fa fa-question-circle"></a>
                 </div>
+                <div class="form-group help">
+                    <input type="password" class="form-control" name="password2"  placeholder="Password">
+                    <i class="fa fa-lock"></i>
+                    <a href="#" class="fa fa-question-circle"></a>
+                </div>
                 <div class="form-group">
                   <input type="text" class="form-control" name="email"  placeholder="E-mail">
                   <i class="fa fa-user"></i>
