@@ -52,18 +52,24 @@ public class UpDate extends HttpServlet {
         user = readingUser.getUserByKey(idKey);
         if (user !=null){
             try {
-                checkUser.isPassAndPass(pass,pass2);
                 if (!user.getUserName().equals(name)){
                     checkUser.isValidationUserName(name);
                     user.setUserName(name);
                     checkUser.IsExistUserUserName(user,PropertiesFileRegistration.getProperties());
                     changesUser.changesUserBySelectionTable(String.valueOf(user.getId()),"userName", name,PropertiesFileRegistration.getProperties());
                 }
-                if (!user.getPassword().equals(pass)){
-                    checkUser.isValidationPassword(pass);
-                    user.setPassword(pass);
-                    checkUser.IsExistUserPassword(user,PropertiesFileRegistration.getProperties());
-                    changesUser.changesUserBySelectionTable(idKey,"password", pass, PropertiesFileRegistration.getProperties());
+                if (!pass2.equals("")){
+                    if (!user.getPassword().equals(pass2)){
+                        checkUser.isValidationPassword(pass2);
+                        user.setPassword(pass2);
+                        changesUser.changesUserBySelectionTable(idKey,"password", pass2, PropertiesFileRegistration.getProperties());
+                    }
+                }else {
+                    if (!user.getPassword().equals(pass)){
+                        checkUser.isValidationPassword(pass);
+                        user.setPassword(pass);
+                        changesUser.changesUserBySelectionTable(idKey,"password", pass, PropertiesFileRegistration.getProperties());
+                    }
                 }
                 if (!user.getEmail().equals(email)){
                     checkUser.isValidationEmail(email);

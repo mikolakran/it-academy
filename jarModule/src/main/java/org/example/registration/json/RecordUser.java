@@ -42,7 +42,7 @@ public class RecordUser implements WriteFileUser {
             ReadingUser readingUser = new GetUser(file);
             JSONObject allUser = readingUser.getAllUser();
             if (allUser!=null) {
-                addUser(user, allUser);
+                addUser(user);
             }else {
                 jsonObject.put(user.getId(), user);
                 list.add(String.valueOf(user.getId()));
@@ -59,9 +59,9 @@ public class RecordUser implements WriteFileUser {
         }
     }
 
-    private void addUser(User user, JSONObject allUser) {
+    private void addUser(User user) {
         ReadingUser getDateBaseUser = new GetUser(file);
-        idGetKey = getDateBaseUser.getIdMax( allUser);
+        idGetKey = getDateBaseUser.getIdMax();
         if (user.getId() <= idGetKey) {
                 idGetKey++;
                 user.setId(idGetKey);

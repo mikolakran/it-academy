@@ -12,7 +12,6 @@ import org.example.registration.inter.exception.LoginException;
 import org.example.registration.json.GetUser;
 import org.example.registration.properties.PropertiesFileRegistration;
 import org.example.registration.user.User;
-import org.json.simple.JSONObject;
 
 import java.io.IOException;
 
@@ -48,8 +47,7 @@ public class AuthFilter implements Filter {
             }
         } else {
             if (user.getUserName() != null && user.getPassword() != null) {
-                JSONObject jsonObject = readingUser.getAllUser();
-                long idMax = readingUser.getIdMax(jsonObject);
+                long idMax = readingUser.getIdMax();
                 for (int i = 1; i <= idMax; i++) {
                     String idKey = String.valueOf(i);
                     if (readingUser.getUserByKey(idKey) != null) {

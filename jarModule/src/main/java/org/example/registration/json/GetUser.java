@@ -7,6 +7,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class GetUser implements ReadingUser {
     private User user = new User();
     public File file;
@@ -15,6 +18,7 @@ public class GetUser implements ReadingUser {
     private JSONObject jsonObject2;
     private JSONObject jsonObject11;
     private long idGetKey;
+    private  List<User> listUsers;
     public GetUser(File file) {
         this.file = file;
     }
@@ -72,7 +76,8 @@ public class GetUser implements ReadingUser {
         return jsonObject1;
     }
 
-    public long getIdMax(JSONObject allUser) {
+    public long getIdMax() {
+        JSONObject allUser = getAllUser();
         JSONObject jsonObject3 = (JSONObject) allUser.get("people");
         for (long i = 1; i < 100; i++) {
             String idKey = String.valueOf(i);
@@ -83,6 +88,28 @@ public class GetUser implements ReadingUser {
             }
         }
         return idGetKey;
+    }
+
+    public List<User> getListIdUsers(){
+         listUsers = new ArrayList<>();
+         JSONObject allUser = getAllUser();
+        JSONObject jsonObject = (JSONObject) allUser.get("people");
+        for (int i = 0; i < 100; i++) {
+            String idKey = String.valueOf(i);
+            JSONObject jsonObject1 = (JSONObject) jsonObject.get(idKey);
+            if (jsonObject1 != null) {
+                if (getUserByKeyTable(idKey, "role").equals("user")) {
+                    User user = new User();
+                    user.setId((Long) jsonObject1.get("id"));
+                    user.setUserName((String) jsonObject1.get("userName"));
+                    user.setPassword((String) jsonObject1.get("password"));
+                    user.setEmail((String) jsonObject1.get("email"));
+                    user.setRole((String) jsonObject1.get("role"));
+                    listUsers.add(user);
+                }
+            }
+        }
+         return listUsers;
     }
     private String setStringUserTable(String table) {
         String table2 = null;

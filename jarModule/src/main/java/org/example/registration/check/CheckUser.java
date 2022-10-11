@@ -22,7 +22,7 @@ public class CheckUser implements CheckUserInterface {
         ReadingUser readingJson = new GetUser(file);
         if (readingJson.getAllUser() != null && !exist) {
             JSONObject jsonObject2 = readingJson.getAllUser();
-            long idMax = readingJson.getIdMax(jsonObject2);
+            long idMax = readingJson.getIdMax();
             JSONObject jsonObject3 = (JSONObject) jsonObject2.get("people");
             if (jsonObject3 != null) {
                 JSONObject jsonObject4;
@@ -34,12 +34,6 @@ public class CheckUser implements CheckUserInterface {
                             if (user.getUserName().equals(jsonObject4.get("userName"))) {
                                 exist = true;
                                 throw new LoginException("User name exist");
-                            }
-                        }
-                        if (user.getPassword() != null) {
-                            if (user.getPassword().equals(jsonObject4.get("password"))) {
-                                exist = true;
-                                throw new LoginException("User password  exist");
                             }
                         }
                         if (user.getEmail() != null) {
@@ -60,7 +54,7 @@ public class CheckUser implements CheckUserInterface {
         ReadingUser readingJson = new GetUser(file);
         if (readingJson.getAllUser() != null && !exist) {
             JSONObject jsonObject2 = readingJson.getAllUser();
-            long idMax = readingJson.getIdMax(jsonObject2);
+            long idMax = readingJson.getIdMax();
             JSONObject jsonObject3 = (JSONObject) jsonObject2.get("people");
             if (jsonObject3 != null) {
                 JSONObject jsonObject4;
@@ -85,7 +79,7 @@ public class CheckUser implements CheckUserInterface {
         ReadingUser readingJson = new GetUser(file);
         if (readingJson.getAllUser() != null && !exist) {
             JSONObject jsonObject2 = readingJson.getAllUser();
-            long idMax = readingJson.getIdMax(jsonObject2);
+            long idMax = readingJson.getIdMax();
             JSONObject jsonObject3 = (JSONObject) jsonObject2.get("people");
             if (jsonObject3 != null) {
                 JSONObject jsonObject4;
@@ -110,7 +104,7 @@ public class CheckUser implements CheckUserInterface {
         ReadingUser readingJson = new GetUser(file);
         if (readingJson.getAllUser() != null && !exist) {
             JSONObject jsonObject2 = readingJson.getAllUser();
-            long idMax = readingJson.getIdMax(jsonObject2);
+            long idMax = readingJson.getIdMax();
             JSONObject jsonObject3 = (JSONObject) jsonObject2.get("people");
             if (jsonObject3 != null) {
                 JSONObject jsonObject4;
@@ -137,12 +131,12 @@ public class CheckUser implements CheckUserInterface {
 
 
     @Override
-    public void isValidationPassword(String passOrUserName) throws LoginException {
+    public void isValidationPassword(String pass) throws LoginException {
         Pattern pattern = Pattern.compile("(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}");
-        if (passOrUserName != null) {
-            Matcher matcher = pattern.matcher(passOrUserName);
+        if (pass != null) {
+            Matcher matcher = pattern.matcher(pass);
             if (matcher.find()) {
-                passOrUserName = matcher.group();
+                pass = matcher.group();
             } else {
                 throw new LoginException("Password is not valid example: w$#$IU7caamq or *s9C#nFSNx#A");
             }

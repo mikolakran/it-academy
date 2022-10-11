@@ -52,7 +52,7 @@
                     <a href="#" class="fa fa-question-circle"></a>
                 </div>
                 <div class="form-group help">
-                    <input type="password" class="form-control" name="password2" required placeholder="Password">
+                    <input type="password" class="form-control" name="password2"  placeholder="Password">
                     <i class="fa fa-lock"></i>
                     <a href="#" class="fa fa-question-circle"></a>
                 </div>
