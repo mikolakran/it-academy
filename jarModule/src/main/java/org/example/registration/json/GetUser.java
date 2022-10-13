@@ -7,6 +7,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class GetUser implements ReadingUser {
     private User user = new User();
     public File file;
@@ -14,6 +17,8 @@ public class GetUser implements ReadingUser {
     private JSONObject jsonObject1;
     private JSONObject jsonObject2;
     private JSONObject jsonObject11;
+    private long idGetKey;
+    private  List<User> listUsers;
     public GetUser(File file) {
         this.file = file;
     }
@@ -33,7 +38,6 @@ public class GetUser implements ReadingUser {
                      user.setEmail((String) jsonObject11.get("email"));
                      user.setRole((String) jsonObject11.get("role"));
              }else {
-                 System.out.println("user key = "+ key +" not true");
                  user = new User();
              }
         } catch (IOException | ParseException e) {
@@ -51,8 +55,6 @@ public class GetUser implements ReadingUser {
             jsonObject11 = (JSONObject) jsonObject2.get(key);
             if(jsonObject11!=null) {
                 setUserTable(table);
-            }else {
-                System.out.println("user key not true");
             }
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
@@ -69,9 +71,45 @@ public class GetUser implements ReadingUser {
                 jsonObject1.get("people");
                 fileReader.close();
         } catch (ParseException | IOException e) {
-            System.out.println("null");
+            System.out.println("null base");
         }
         return jsonObject1;
+    }
+
+    public long getIdMax() {
+        JSONObject allUser = getAllUser();
+        JSONObject jsonObject3 = (JSONObject) allUser.get("people");
+        for (long i = 1; i < 100; i++) {
+            String idKey = String.valueOf(i);
+            JSONObject jsonObject4 = (JSONObject) jsonObject3.get(idKey);
+            if (jsonObject4 != null) {
+                Object o1 = jsonObject4.get("id");
+                idGetKey = (long) o1;
+            }
+        }
+        return idGetKey;
+    }
+
+    public List<User> getListIdUsers(){
+         listUsers = new ArrayList<>();
+         JSONObject allUser = getAllUser();
+        JSONObject jsonObject = (JSONObject) allUser.get("people");
+        for (int i = 0; i < 100; i++) {
+            String idKey = String.valueOf(i);
+            JSONObject jsonObject1 = (JSONObject) jsonObject.get(idKey);
+            if (jsonObject1 != null) {
+                if (getUserByKeyTable(idKey, "role").equals("user")) {
+                    User user = new User();
+                    user.setId((Long) jsonObject1.get("id"));
+                    user.setUserName((String) jsonObject1.get("userName"));
+                    user.setPassword((String) jsonObject1.get("password"));
+                    user.setEmail((String) jsonObject1.get("email"));
+                    user.setRole((String) jsonObject1.get("role"));
+                    listUsers.add(user);
+                }
+            }
+        }
+         return listUsers;
     }
     private String setStringUserTable(String table) {
         String table2 = null;

@@ -1,14 +1,20 @@
 package org.example.registration.inter;
 
 
+import org.example.registration.inter.exception.LoginException;
 import org.example.registration.user.User;
 
 import java.io.File;
-import java.util.List;
+
 
 public interface CheckUserInterface {
-    boolean IsExistUser(User user, List<String> id, int count, File file);
+    boolean IsExistUser(User user, File file) throws LoginException;
     void setExistUser(boolean exist);
-    String isValidationPasswordOrUserName(String pass);
-    String isValidationEmail(String pass);
+    void isValidationPassword(String passOrUserName) throws LoginException;
+    void isPassAndPass(String pass,String pass2)throws LoginException;
+    void isValidationUserName(String passOrUserName) throws LoginException;
+    void isValidationEmail(String email) throws LoginException;
+    void IsExistUserUserName(User user, File file)throws LoginException;
+    void IsExistUserPassword(User user, File file) throws LoginException;
+    void IsExistUserEmail(User user, File file) throws LoginException;
 }
