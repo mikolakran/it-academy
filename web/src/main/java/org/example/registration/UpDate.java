@@ -15,12 +15,11 @@ import org.example.registration.inter.CheckUserInterface;
 import org.example.registration.inter.ReadingUser;
 import org.example.registration.inter.exception.LoginException;
 import org.example.registration.json.GetUser;
-import org.example.registration.properties.PropertiesFileRegistration;
 import org.example.registration.user.User;
 
 import java.io.IOException;
 @WebServlet(name = "UpDate",
-urlPatterns = "/upDate")
+        urlPatterns = "/upDate")
 public class UpDate extends HttpServlet {
     private String idKey = null;
 
@@ -29,14 +28,14 @@ public class UpDate extends HttpServlet {
         idKey = req.getParameter("id");
         HttpSession session = req.getSession();
         session.setAttribute("idName",idKey);
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/upDate.jsp");
-            requestDispatcher.forward(req, resp);
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/upDate.jsp");
+        requestDispatcher.forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ChangesUserInterface changesUser = new ChangesUser(PropertiesFileRegistration.getProperties());
-        ReadingUser readingUser = new GetUser(PropertiesFileRegistration.getProperties());
+        ChangesUserInterface changesUser = new ChangesUser();
+        ReadingUser readingUser = new GetUser();
         CheckUserInterface checkUser = new CheckUser();
         HttpSession session = req.getSession();
         User user1 = (User) session.getAttribute("user");
@@ -49,33 +48,33 @@ public class UpDate extends HttpServlet {
         String pass = req.getParameter("password");
         String pass2 = req.getParameter("password2");
         User user ;
-        user = readingUser.getUserByKey(idKey);
+        user = readingUser.getUserByKey(Integer.parseInt(idKey));
         if (user !=null){
             try {
                 if (!user.getUserName().equals(name)){
                     checkUser.isValidationUserName(name);
                     user.setUserName(name);
-                    checkUser.IsExistUserUserName(user,PropertiesFileRegistration.getProperties());
-                    changesUser.changesUserBySelectionTable(String.valueOf(user.getId()),"userName", name,PropertiesFileRegistration.getProperties());
+                    checkUser.isExistUserName(user);
+                    changesUser.changesBySelectTable(user.getId(),"name", name);
                 }
                 if (!pass2.equals("")){
                     if (!user.getPassword().equals(pass2)){
                         checkUser.isValidationPassword(pass2);
                         user.setPassword(pass2);
-                        changesUser.changesUserBySelectionTable(idKey,"password", pass2, PropertiesFileRegistration.getProperties());
+                        changesUser.changesBySelectTable(Integer.parseInt(idKey),"password", pass2);
                     }
                 }else {
                     if (!user.getPassword().equals(pass)){
                         checkUser.isValidationPassword(pass);
                         user.setPassword(pass);
-                        changesUser.changesUserBySelectionTable(idKey,"password", pass, PropertiesFileRegistration.getProperties());
+                        changesUser.changesBySelectTable(Integer.parseInt(idKey),"password", pass);
                     }
                 }
                 if (!user.getEmail().equals(email)){
                     checkUser.isValidationEmail(email);
                     user.setEmail(email);
-                    checkUser.IsExistUserEmail(user,PropertiesFileRegistration.getProperties());
-                    changesUser.changesUserBySelectionTable(idKey,"email", email, PropertiesFileRegistration.getProperties());
+                    checkUser.isExistUserEmail(user);
+                    changesUser.changesBySelectTable(Integer.parseInt(idKey),"email", email);
                 }
             } catch (LoginException e) {
                 String error = String.valueOf(e.getMessage());
@@ -92,7 +91,7 @@ public class UpDate extends HttpServlet {
                 if (user1.getId()==(user.getId())) {
                     session.setAttribute("idUserName", name);
                 } else {
-                    user1 = readingUser.getUserByKey(String.valueOf(user1.getId()));
+                    user1 = readingUser.getUserByKey( user1.getId());
                     session.setAttribute("idUserName", user1.getUserName());
                 }
             }else {

@@ -7,7 +7,6 @@ import org.example.registration.check.ChangesUser;
 import org.example.registration.inter.ChangesUserInterface;
 import org.example.registration.inter.ReadingUser;
 import org.example.registration.json.GetUser;
-import org.example.registration.properties.PropertiesFileRegistration;
 
 import java.io.IOException;
 
@@ -23,12 +22,12 @@ public class FilterUsers implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String idKey1 = request.getParameter("id");
-        ChangesUserInterface changesUser = new ChangesUser(PropertiesFileRegistration.getProperties());
-        changesUser.deleteUserByKey(idKey1, PropertiesFileRegistration.getProperties());
-        ReadingUser readingUser = new GetUser(PropertiesFileRegistration.getProperties());
-        for (int i = 0; i < 100; i++) {
-            request.setAttribute("list", readingUser.getListIdUsers());
+        ChangesUserInterface changesUser = new ChangesUser();
+        if (idKey1!=null) {
+            changesUser.deleteUserByKey(Integer.parseInt(idKey1));
         }
+        ReadingUser readingUser = new GetUser();
+        request.setAttribute("list", readingUser.getListUsers());
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

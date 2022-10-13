@@ -3,7 +3,7 @@ package org.example.registration.user;
 import java.util.Objects;
 
 public class User {
-    private long id;
+    private int id;
     private String userName;
     private String password;
     private String email;
@@ -12,8 +12,7 @@ public class User {
     public User() {
     }
 
-    public User(long id, String username, String password, String email, String role) {
-        this.id = id;
+    public User( String username, String password, String email, String role) {
         this.userName = username;
         this.password = password;
         this.email = email;
@@ -36,11 +35,11 @@ public class User {
         this.password = password;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -60,16 +59,16 @@ public class User {
         this.role = role;
     }
 
-       @Override
-        public String toString() {
-            return "    \""+id+"\" : {\n" +
-                    "      \"id\" : \""+id+"\"\n" +
-                    "      \"userName\" : \""+ userName +"\"\n" +
-                    "      \"password\" : \""+password+"\"\n" +
-                    "      \"email\" : \""+email+"\"\n" +
-                    "      \"role\" : \""+role+"\"\n" +
-                    "    },";
-        }
+    @Override
+    public String toString() {
+        return "    \""+id+"\" : {\n" +
+                "      \"id\" : \""+id+"\"\n" +
+                "      \"userName\" : \""+ userName +"\"\n" +
+                "      \"password\" : \""+password+"\"\n" +
+                "      \"email\" : \""+email+"\"\n" +
+                "      \"role\" : \""+role+"\"\n" +
+                "    },";
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

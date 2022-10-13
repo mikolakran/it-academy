@@ -7,10 +7,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.example.registration.inter.ReadingUser;
 import org.example.registration.inter.exception.LoginException;
 import org.example.registration.inter.WriteFileUser;
+import org.example.registration.json.GetUser;
 import org.example.registration.json.RecordUser;
-import org.example.registration.properties.PropertiesFileRegistration;
 import org.example.registration.user.User;
 
 import java.io.IOException;
@@ -18,9 +19,8 @@ import java.io.IOException;
 @WebServlet(name = "RegistrationServlet",
         urlPatterns = {"/registration"})
 public class RegistrationServlet extends HttpServlet {
-    private int count = 1;
     private String role;
-    private final WriteFileUser writeFileUser = new RecordUser(PropertiesFileRegistration.getProperties());
+    private final WriteFileUser writeFileUser = new RecordUser();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,6 +32,7 @@ public class RegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
         HttpSession session = req.getSession();
+        ReadingUser readingUser = new GetUser();
         if (req.getAttribute("error") == null) {
             if (email.equals("mikolakran@gmail.com")) { //my admin email
                 setRole("admin");
@@ -39,14 +40,11 @@ public class RegistrationServlet extends HttpServlet {
             } else {
                 setRole("user");
             }
-            User user = new User(count, req.getParameter("userName"),
+            User user = new User(req.getParameter("userName"),
                     req.getParameter("password"), req.getParameter("email"), getRole());
-            if (user.getUserName() != null && user.getPassword() != null &&
-                    user.getEmail() != null) {
-                count++;
-            }
             try {
                 writeFileUser.writeUser(user);
+                user = readingUser.getUserByKeyTableName(user.getUserName());
                 session.setAttribute("user", user);
                 req.setAttribute("userName", user.getUserName());
             } catch (LoginException ignored) {

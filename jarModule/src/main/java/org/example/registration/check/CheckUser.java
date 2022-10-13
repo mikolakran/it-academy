@@ -1,13 +1,14 @@
 package org.example.registration.check;
 
+import org.example.registration.baseConnection.DriverConnection;
+import org.example.registration.baseConnection.PropertiesSQL;
 import org.example.registration.inter.exception.LoginException;
 import org.example.registration.inter.CheckUserInterface;
-import org.example.registration.inter.ReadingUser;
-import org.example.registration.json.GetUser;
 import org.example.registration.user.User;
-import org.json.simple.JSONObject;
 
-import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,110 +18,42 @@ public class CheckUser implements CheckUserInterface {
 
 
     /*Check User на совпадение*/
-    @Override
-    public boolean IsExistUser(User user, File file) throws LoginException {
-        ReadingUser readingJson = new GetUser(file);
-        if (readingJson.getAllUser() != null && !exist) {
-            JSONObject jsonObject2 = readingJson.getAllUser();
-            long idMax = readingJson.getIdMax();
-            JSONObject jsonObject3 = (JSONObject) jsonObject2.get("people");
-            if (jsonObject3 != null) {
-                JSONObject jsonObject4;
-                for (int i = 1; i <= idMax; i++) {
-                    String idKey = String.valueOf(i);
-                    jsonObject4 = (JSONObject) jsonObject3.get(idKey);
-                    if (jsonObject4 != null) {
-                        if (user.getUserName() != null) {
-                            if (user.getUserName().equals(jsonObject4.get("userName"))) {
-                                exist = true;
-                                throw new LoginException("User name exist");
-                            }
-                        }
-                        if (user.getEmail() != null) {
-                            if (user.getEmail().equals(jsonObject4.get("email"))) {
-                                exist = true;
-                                throw new LoginException("User email  exist");
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    public boolean isExistUser(User user) throws LoginException{
+        isExistUserName(user);
+        isExistUserEmail(user);
         return exist;
     }
 
-    @Override
-    public void IsExistUserUserName(User user, File file) throws LoginException {
-        ReadingUser readingJson = new GetUser(file);
-        if (readingJson.getAllUser() != null && !exist) {
-            JSONObject jsonObject2 = readingJson.getAllUser();
-            long idMax = readingJson.getIdMax();
-            JSONObject jsonObject3 = (JSONObject) jsonObject2.get("people");
-            if (jsonObject3 != null) {
-                JSONObject jsonObject4;
-                for (int i = 1; i <= idMax; i++) {
-                    String idKey = String.valueOf(i);
-                    jsonObject4 = (JSONObject) jsonObject3.get(idKey);
-                    if (jsonObject4 != null) {
-                        if (user.getUserName() != null) {
-                            if (user.getUserName().equals(jsonObject4.get("userName"))) {
-                                exist = true;
-                                throw new LoginException("User name exist");
-                            }
-                        }
-                    }
-                }
+    public void isExistUserName(User user) throws  LoginException {
+        try (PreparedStatement preparedStatement = DriverConnection.driverConnection().prepareStatement(
+                PropertiesSQL.getProperties("SQL_USER_NAME")+'?')){
+            preparedStatement.setString(1,user.getUserName());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()&& !exist){
+                exist = true;
+                throw new LoginException("User name exist");
             }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    @Override
-    public void IsExistUserPassword(User user, File file) throws LoginException {
-        ReadingUser readingJson = new GetUser(file);
-        if (readingJson.getAllUser() != null && !exist) {
-            JSONObject jsonObject2 = readingJson.getAllUser();
-            long idMax = readingJson.getIdMax();
-            JSONObject jsonObject3 = (JSONObject) jsonObject2.get("people");
-            if (jsonObject3 != null) {
-                JSONObject jsonObject4;
-                for (int i = 1; i <= idMax; i++) {
-                    String idKey = String.valueOf(i);
-                    jsonObject4 = (JSONObject) jsonObject3.get(idKey);
-                    if (jsonObject4 != null) {
-                        if (user.getPassword() != null) {
-                            if (user.getPassword().equals(jsonObject4.get("password"))) {
-                                exist = true;
-                                throw new LoginException("User password  exist");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    public void isExistUserEmail(User user) throws LoginException {
 
-    @Override
-    public void IsExistUserEmail(User user, File file) throws LoginException {
-        ReadingUser readingJson = new GetUser(file);
-        if (readingJson.getAllUser() != null && !exist) {
-            JSONObject jsonObject2 = readingJson.getAllUser();
-            long idMax = readingJson.getIdMax();
-            JSONObject jsonObject3 = (JSONObject) jsonObject2.get("people");
-            if (jsonObject3 != null) {
-                JSONObject jsonObject4;
-                for (int i = 1; i <= idMax; i++) {
-                    String idKey = String.valueOf(i);
-                    jsonObject4 = (JSONObject) jsonObject3.get(idKey);
-                    if (jsonObject4 != null) {
-                        if (user.getEmail() != null) {
-                            if (user.getEmail().equals(jsonObject4.get("email"))) {
-                                exist = true;
-                                throw new LoginException("User email  exist");
-                            }
-                        }
-                    }
-                }
+        try (PreparedStatement preparedStatement = DriverConnection.driverConnection().prepareStatement(
+                PropertiesSQL.getProperties("SQL_USER_EMAIL")+'?')){
+            preparedStatement.setString(1,user.getEmail());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()){
+                exist = true;
+                throw new LoginException("User email exist");
             }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -152,7 +85,7 @@ public class CheckUser implements CheckUserInterface {
     }
 
     public void isValidationUserName(String passOrUserName) throws LoginException {
-        Pattern pattern = Pattern.compile("[a-zA-Z][a-zA-Z0-9-_\\.]{3,16}");
+        Pattern pattern = Pattern.compile("[a-zA-Z][a-zA-Z0-9-_.]{3,16}");
         if (passOrUserName != null) {
             Matcher matcher = pattern.matcher(passOrUserName);
             if (matcher.find()) {
