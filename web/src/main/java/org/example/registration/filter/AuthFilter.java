@@ -47,7 +47,9 @@ public class AuthFilter implements Filter {
         } else {
             if (user.getUserName() != null && user.getPassword() != null) {
                 user = readingUser.getUserByKeyTableName(user.getUserName());
-                request.getSession().setAttribute("user", user);
+                if (user.getUserName() != null && user.getPassword() != null) {
+                    request.getSession().setAttribute("user", user);
+                }
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);

@@ -90,6 +90,7 @@ public class UpDate extends HttpServlet {
             if (user1.getRole().equals("admin")) {
                 if (user1.getId()==(user.getId())) {
                     session.setAttribute("idUserName", name);
+                    session.setAttribute("role", user.getRole());
                 } else {
                     user1 = readingUser.getUserByKey( user1.getId());
                     session.setAttribute("idUserName", user1.getUserName());

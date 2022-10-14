@@ -23,7 +23,7 @@ public class ChangesUser implements ChangesUserInterface {
 
     public void changesBySelectTable(int key, String keyTable, String text){
         try (PreparedStatement preparedStatement = DriverConnection.driverConnection().prepareStatement(
-                "UPDATE users SET "+keyTable+"=? WHERE id=?;")){
+                "UPDATE user SET "+keyTable+"=? WHERE id=?;")){
             preparedStatement.setString(1,text);
             preparedStatement.setInt(2,key);
             preparedStatement.executeUpdate();

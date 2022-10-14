@@ -27,9 +27,9 @@ public class RecordUser implements WriteFileUser {
             try (PreparedStatement preparedStatement = DriverConnection.driverConnection().prepareStatement(sql)) {
                 preparedStatement.setInt(1, 0);
                 preparedStatement.setString(2, user.getUserName());
-                preparedStatement.setString(3, user.getPassword());
-                preparedStatement.setString(4, user.getEmail());
-                preparedStatement.setString(5, user.getRole());
+                preparedStatement.setString(3, user.getEmail());
+                preparedStatement.setString(4, user.getRole());
+                preparedStatement.setString(5, user.getPassword());
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);

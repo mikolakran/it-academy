@@ -1,6 +1,7 @@
 package org.example.registration;
 
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -49,8 +50,9 @@ public class RegistrationServlet extends HttpServlet {
                 req.setAttribute("userName", user.getUserName());
             } catch (LoginException ignored) {
             }
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/welcome.jsp");
-            requestDispatcher.forward(req, resp);
+            ServletContext context = getServletContext();
+            RequestDispatcher dispatcher = context.getRequestDispatcher("/hello");
+            dispatcher.forward(req, resp);
         } else {
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/add.jsp");
             requestDispatcher.forward(req, resp);
