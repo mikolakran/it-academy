@@ -27,13 +27,14 @@ public class Home extends HttpServlet {
         HttpSession session = req.getSession();
         User user;
         user = (User) session.getAttribute("user");
-        if (user != null) {
+        if (user != null&&req.getAttribute("error")==null) {
             session.setAttribute("userName", user.getUserName());
             session.setAttribute("role", user.getRole());
             ServletContext context = getServletContext();
             RequestDispatcher dispatcher = context.getRequestDispatcher("/hello");
             dispatcher.forward(req, resp);
         } else {
+            session.removeAttribute("user");
             req.setAttribute("registration", "Sorry user or password not true");
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("index.jsp");
             requestDispatcher.forward(req, resp);

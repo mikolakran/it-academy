@@ -65,12 +65,10 @@ public class CheckUser implements CheckUserInterface {
 
     @Override
     public void isValidationPassword(String pass) throws LoginException {
-        Pattern pattern = Pattern.compile("(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}");
+        Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[\\da-zA-Z!@#$%^&*]{8,}");
         if (pass != null) {
             Matcher matcher = pattern.matcher(pass);
-            if (matcher.find()) {
-                pass = matcher.group();
-            } else {
+            if (!matcher.find()) {
                 throw new LoginException("Password is not valid example: w$#$IU7caamq or *s9C#nFSNx#A");
             }
         }
@@ -85,12 +83,10 @@ public class CheckUser implements CheckUserInterface {
     }
 
     public void isValidationUserName(String passOrUserName) throws LoginException {
-        Pattern pattern = Pattern.compile("[a-zA-Z][a-zA-Z0-9-_.]{3,16}");
+        Pattern pattern = Pattern.compile("[a-zA-Z][a-zA-Z\\d-_.]{3,16}");
         if (passOrUserName != null) {
             Matcher matcher = pattern.matcher(passOrUserName);
-            if (matcher.find()) {
-                passOrUserName = matcher.group();
-            } else {
+            if (!matcher.find()) {
                 throw new LoginException("Name is not valid example: rad2fas22");
             }
         }
@@ -101,9 +97,7 @@ public class CheckUser implements CheckUserInterface {
         Pattern pattern = Pattern.compile("[a-zA-Z\\d]{3,16}@[a-zA-Z\\d\\S]+\\.[a-zA-Z\\d]{2,3}");
         if (email != null) {
             Matcher matcher = pattern.matcher(email);
-            if (matcher.find()) {
-                email = matcher.group();
-            } else {
+            if (!matcher.find()) {
                 throw new LoginException("Email is valid");
             }
         }

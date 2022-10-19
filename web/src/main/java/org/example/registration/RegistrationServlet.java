@@ -21,7 +21,6 @@ import java.io.IOException;
         urlPatterns = {"/registration"})
 public class RegistrationServlet extends HttpServlet {
     private String role;
-    private final WriteFileUser writeFileUser = new RecordUser();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,7 +33,7 @@ public class RegistrationServlet extends HttpServlet {
         String email = req.getParameter("email");
         HttpSession session = req.getSession();
         ReadingUser readingUser = new GetUser();
-        if (req.getAttribute("error") == null) {
+        WriteFileUser writeFileUser = new RecordUser();
             if (email.equals("mikolakran@gmail.com")) { //my admin email
                 setRole("admin");
                 req.setAttribute("role", getRole());
@@ -43,17 +42,22 @@ public class RegistrationServlet extends HttpServlet {
             }
             User user = new User(req.getParameter("userName"),
                     req.getParameter("password"), req.getParameter("email"), getRole());
+        if (req.getAttribute("error") == null) {
             try {
                 writeFileUser.writeUser(user);
                 user = readingUser.getUserByKeyTableName(user.getUserName());
                 session.setAttribute("user", user);
                 req.setAttribute("userName", user.getUserName());
-            } catch (LoginException ignored) {
+                ServletContext context = getServletContext();
+                RequestDispatcher dispatcher = context.getRequestDispatcher("/hello");
+                dispatcher.forward(req, resp);
+            } catch (LoginException e) {
+                String error = String.valueOf(e.getMessage());
+                req.setAttribute("error", error);
+                RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/add.jsp");
+                requestDispatcher.forward(req, resp);
             }
-            ServletContext context = getServletContext();
-            RequestDispatcher dispatcher = context.getRequestDispatcher("/hello");
-            dispatcher.forward(req, resp);
-        } else {
+        }else {
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/add.jsp");
             requestDispatcher.forward(req, resp);
         }

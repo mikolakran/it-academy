@@ -32,6 +32,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         isUserInJson(checkUser, request);
         HttpSession session = request.getSession();
+        String pass = request.getParameter("password");
         Object s = session.getAttribute("user");
         if (s != null) {
             if (session.getAttribute("userName") != null && session.getAttribute("password") != null) {
@@ -47,7 +48,7 @@ public class AuthFilter implements Filter {
         } else {
             if (user.getUserName() != null && user.getPassword() != null) {
                 user = readingUser.getUserByKeyTableName(user.getUserName());
-                if (user.getUserName() != null && user.getPassword() != null) {
+                if (user.getUserName() != null && user.getPassword() != null&&user.getPassword().equals(pass)){
                     request.getSession().setAttribute("user", user);
                 }
             }
@@ -65,7 +66,6 @@ public class AuthFilter implements Filter {
             checkUser.isPassAndPass(user.getPassword(), pass);
             checkUser.isValidationUserName(user.getUserName());
             checkUser.isValidationPassword(user.getPassword());
-            checkUser.isExistUser(user);
         } catch (LoginException e) {
             String error = String.valueOf(e.getMessage());
             request.setAttribute("error", error);
