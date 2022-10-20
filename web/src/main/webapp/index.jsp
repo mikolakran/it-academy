@@ -33,11 +33,8 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-offset-3 col-md-6">
-      <c:if test="${registration!=null}">
-        <h3 style="color: red">${registration}</h3>
-      </c:if>
-      <c:if test="${error!=null}">
-        <h4 style=" color: red" >${error}</h4>
+      <c:if test="${registration!=null or error != null}">
+        <h3 style="color: red">Sorry user or password not true</h3>
       </c:if>
       <form method="post" class="form-horizontal" action="home">
         <small>
@@ -53,7 +50,7 @@
           <a href="#" class="fa fa-question-circle"></a>
         </div>
         <div class="form-group">
-          <button type="submit" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/home'">ВХОД</button>
+          <button type="submit" class="btn btn-default">ВХОД</button>
         </div>
       </form>
     </div>

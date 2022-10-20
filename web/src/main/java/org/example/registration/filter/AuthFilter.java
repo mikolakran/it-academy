@@ -10,7 +10,6 @@ import org.example.registration.inter.CheckUserInterface;
 import org.example.registration.inter.ReadingUser;
 import org.example.registration.inter.exception.LoginException;
 import org.example.registration.json.GetUser;
-import org.example.registration.properties.PropertiesFileRegistration;
 import org.example.registration.user.User;
 
 import java.io.IOException;
@@ -29,10 +28,11 @@ public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         CheckUserInterface checkUser = new CheckUser();
-        ReadingUser readingUser = new GetUser(PropertiesFileRegistration.getProperties());
+        ReadingUser readingUser = new GetUser();
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         isUserInJson(checkUser, request);
         HttpSession session = request.getSession();
+        String pass = request.getParameter("password");
         Object s = session.getAttribute("user");
         if (s != null) {
             if (session.getAttribute("userName") != null && session.getAttribute("password") != null) {
@@ -47,20 +47,9 @@ public class AuthFilter implements Filter {
             }
         } else {
             if (user.getUserName() != null && user.getPassword() != null) {
-                long idMax = readingUser.getIdMax();
-                for (int i = 1; i <= idMax; i++) {
-                    String idKey = String.valueOf(i);
-                    if (readingUser.getUserByKey(idKey) != null) {
-                        if (readingUser.getUserByKeyTable(idKey, "userName") != null &&
-                                readingUser.getUserByKeyTable(idKey, "userName").equals(user.getUserName()) &&
-                                readingUser.getUserByKeyTable(idKey, "password") != null &&
-                                readingUser.getUserByKeyTable(idKey, "password").equals(user.getPassword())) {
-                            user.setEmail(readingUser.getUserByKeyTable(idKey, "email"));
-                            user.setRole(readingUser.getUserByKeyTable(idKey, "role"));
-                            user.setId(Long.parseLong(idKey));
-                            request.getSession().setAttribute("user", user);
-                        }
-                    }
+                user = readingUser.getUserByKeyTableName(user.getUserName());
+                if (user.getUserName() != null && user.getPassword() != null&&user.getPassword().equals(pass)){
+                    request.getSession().setAttribute("user", user);
                 }
             }
         }
@@ -77,7 +66,6 @@ public class AuthFilter implements Filter {
             checkUser.isPassAndPass(user.getPassword(), pass);
             checkUser.isValidationUserName(user.getUserName());
             checkUser.isValidationPassword(user.getPassword());
-            checkUser.IsExistUser(user, PropertiesFileRegistration.getProperties());
         } catch (LoginException e) {
             String error = String.valueOf(e.getMessage());
             request.setAttribute("error", error);

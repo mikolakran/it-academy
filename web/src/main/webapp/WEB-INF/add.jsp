@@ -59,7 +59,7 @@
                   <i class="fa fa-user"></i>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/registration'">Далее</button>
+                    <button type="submit" class="btn btn-default" >Далее</button>
                 </div>
             </form>
         </div>
