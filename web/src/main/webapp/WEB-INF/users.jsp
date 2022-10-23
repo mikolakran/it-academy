@@ -33,7 +33,10 @@
     <div class="col-md-2" ></div>
     <div  class=" col-md-4">
         <div>
-            <h1 id="h1r" class=" text-center ">Your users</h1>
+            <h1 id="h1r" class=" text-center">Your users</h1>
+            <c:if test="${userNull!=null}">
+                <h3 class="text-center">${userNull}</h3>
+            </c:if>
             <div class="container-fluid" ></div>
             <div class="container-fluid"></div>
         </div>
@@ -47,17 +50,22 @@
             <c:forEach var="user" items="${list}">
                 <ul>
                     <li>${user.id}, ${user.userName}, ${user.password}, ${user.email}, ${user.role}
-                        <a href="${pageContext.request.contextPath}/upDate?id=${user.id}" class="btn btn-primary" >  Update</a>
-                        <a href="${pageContext.request.contextPath}/users?id=${user.id}" class="btn btn-primary" >  Delete</a></li>
+                        <a href="${pageContext.request.contextPath}/upDate?idUser=${user.id}" class="btn btn-primary" >  Update</a>
+                        <a href="${pageContext.request.contextPath}/users?idUser=${user.id}" class="btn btn-primary" >  Delete</a></li>
                 </ul>
             </c:forEach>
     </div>
 </div>
 </br>
 <div class="container-fluid">
-    <div class="col-md-3"></div>
+    <c:if test="${userNul==null}">
+        <div class="col-md-3"></div>
+    </c:if>
+    <c:if test="${userNull!=null}">
+        <div class="col-md-3"></div>
+    </c:if>
     <div class="col-md-2">
-        <a href="${pageContext.request.contextPath}/hello" class="btn btn-primary">welcome</a>
+        <a href="${pageContext.request.contextPath}/welcome" class="btn btn-primary">welcome</a>
         <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary" >logout</a>
     </div>
 </div>

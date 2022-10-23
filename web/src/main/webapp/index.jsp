@@ -33,7 +33,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-offset-3 col-md-6">
-      <c:if test="${registration!=null or error != null}">
+      <c:if test="${registration != null or error != null}">
         <h3 style="color: red">Sorry user or password not true</h3>
       </c:if>
       <form method="post" class="form-horizontal" action="home">
@@ -55,7 +55,7 @@
       </form>
     </div>
 
-  </div><!-- /.row -->
-</div><!-- /.container -->
+  </div>
+</div>
 </body>
 </html>
