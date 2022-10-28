@@ -16,7 +16,8 @@ import java.sql.SQLException;
 public class UpDateFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
+                         FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         UserDAO userDAO = new UserDAOImpl();
         String idKey = request.getParameter("idUser");

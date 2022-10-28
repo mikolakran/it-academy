@@ -35,7 +35,8 @@ public class WelcomeServlet extends HttpServlet {
         setNameAndRoleUser(req, resp, user);
     }
 
-    private void setNameAndRoleUser(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+    private void setNameAndRoleUser(HttpServletRequest req,
+                                    HttpServletResponse resp, User user) throws ServletException, IOException {
         UserDAO userDAO = new UserDAOImpl();
         req.setAttribute("name", user.getUserName());
         req.setAttribute("role", userDAO.getRole(user));
