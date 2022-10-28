@@ -22,9 +22,7 @@ public class WelcomeServlet extends HttpServlet {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         if (user != null) {
-            setNameAndRoleUser(req, user);
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/welcome.jsp");
-            requestDispatcher.forward(req, resp);
+            setNameAndRoleUser(req,resp, user);
         } else {
             resp.sendRedirect(req.getContextPath() + "/home");
         }
@@ -34,14 +32,14 @@ public class WelcomeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
-        setNameAndRoleUser(req, user);
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/welcome.jsp");
-        requestDispatcher.forward(req, resp);
+        setNameAndRoleUser(req, resp, user);
     }
 
-    private void setNameAndRoleUser(HttpServletRequest req, User user) {
+    private void setNameAndRoleUser(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         UserDAO userDAO = new UserDAOImpl();
         req.setAttribute("name", user.getUserName());
         req.setAttribute("role", userDAO.getRole(user));
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/welcome.jsp");
+        requestDispatcher.forward(req, resp);
     }
 }

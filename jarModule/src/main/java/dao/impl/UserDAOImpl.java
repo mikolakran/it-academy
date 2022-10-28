@@ -16,12 +16,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class UserDAOImpl implements UserDAO {
     private final ValidationAuth checkUser = new CheckUser();
+    private final static Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
     @Override
-    public User save(User user) throws LoginException {
+    public void save(User user) throws LoginException, SQLException, PropertyVetoException {
         if (user.getUserName().equals(user.getPassword())) {
             throw new LoginException("userName and password same");
         }
@@ -35,16 +38,16 @@ public class UserDAOImpl implements UserDAO {
                 preparedStatement.setString(4, user.getRole());
                 preparedStatement.setString(5, user.getPassword());
                 preparedStatement.executeUpdate();
-            } catch (SQLException  e) {
-                checkUser.validationSQL(e);
-            } catch (PropertyVetoException e) {
-                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                if (checkUser.validationSQL(e)){
+                    logger.error(e.getMessage(),new Throwable(e.getMessage()));
+                    throw new SQLException(e);
+                }
             }
-        return null;
     }
 
     @Override
-    public User get(long id) {
+    public User get(long id) throws LoginException {
         User user = new User();
         PreparedStatement preparedStatement;
         String sql = PropertiesSQL.getProperties("SQL_USER_ID")+"?";
@@ -53,14 +56,15 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, (int) id);
             setResult(user, preparedStatement);
         } catch (SQLException | PropertyVetoException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage(),new Throwable(e.getMessage()));
+            throw new LoginException(e.getMessage());
         }
         return user;
     }
 
 
     @Override
-    public User getByName(String name) {
+    public User getByName(String name) throws LoginException {
         User user = new User();
         PreparedStatement preparedStatement;
         String sql = PropertiesSQL.getProperties("SQL_USER_NAME")+"?";
@@ -69,13 +73,14 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(1,name);
             setResult(user, preparedStatement);
         } catch (SQLException | PropertyVetoException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage(),new Throwable(e.getMessage()));
+            throw new LoginException(e.getMessage());
         }
         return user;
     }
 
     @Override
-    public List<User> getListUsers() {
+    public List<User> getListUsers() throws LoginException {
         List<User> listUsers = new ArrayList<>();
         PreparedStatement preparedStatement;
         String sql = PropertiesSQL.getProperties("SQL_USERS");
@@ -94,7 +99,8 @@ public class UserDAOImpl implements UserDAO {
                 }
             }
         } catch (SQLException | PropertyVetoException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage(),new Throwable(e.getMessage()));
+            throw new LoginException(e.getMessage());
         }
         return listUsers;
     }
@@ -124,7 +130,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void update(long key, String keyTable, String text) throws LoginException {
+    public void update(long key, String keyTable, String text) throws LoginException, SQLException, PropertyVetoException {
         PreparedStatement preparedStatement;
         String sql = "UPDATE user SET "+keyTable+"=? WHERE id=?;";
         try (Connection connection = DataSourceConnectors.getInstance().getConnection()){
@@ -133,14 +139,14 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setInt(2, (int) key);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            checkUser.validationSQL(e);
-        } catch (PropertyVetoException e) {
-            throw new RuntimeException(e);
+            if (checkUser.validationSQL(e)){
+                throw new SQLException(e);
+            }
         }
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(long id) throws LoginException {
         PreparedStatement preparedStatement;
         String sql = PropertiesSQL.getProperties("SQL_USER_DELETE")+"?";
         try (Connection connection = DataSourceConnectors.getInstance().getConnection()){
@@ -148,7 +154,8 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, (int) id);
             preparedStatement.executeUpdate();
         } catch (SQLException | PropertyVetoException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage(),new Throwable(e.getMessage()));
+            throw new LoginException(e.getMessage());
         }
     }
 }

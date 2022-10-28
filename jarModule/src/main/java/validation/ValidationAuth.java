@@ -11,5 +11,5 @@ public interface ValidationAuth {
 
     void validationEmail(String email) throws LoginException;
 
-    void validationSQL(Exception e) throws LoginException;
+    boolean validationSQL(Exception e) throws LoginException;
 }

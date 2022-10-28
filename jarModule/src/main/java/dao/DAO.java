@@ -3,9 +3,12 @@ package dao;
 
 import exception.LoginException;
 
+import java.beans.PropertyVetoException;
+import java.sql.SQLException;
+
 public interface DAO <T>{
-    T save(T t) throws LoginException;
-    T get(long id);
-    void update(long key, String keyTable, String text) throws LoginException;
-    void delete(long id);
+    void save(T t) throws LoginException, SQLException, PropertyVetoException;
+    T get(long id) throws PropertyVetoException, SQLException, LoginException;
+    void update(long key, String keyTable, String text) throws LoginException, SQLException, PropertyVetoException;
+    void delete(long id) throws LoginException;
 }

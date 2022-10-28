@@ -27,16 +27,21 @@ public class AuthFilter implements Filter {
         UserDAO userDAO = new UserDAOImpl();
         ValidationAuth checkUser = new CheckUser();
         user = (User) session.getAttribute("user");
-        if (session.getAttribute("user") == null || user.getId() == 0) {
-            isValidation(request, checkUser);
-            user = userDAO.getByName(user.getUserName());
-            if (user != null) {
-                session.setAttribute("user", user);
-                session.setAttribute("name", user.getUserName());
-            }
-        } else {
-            isValidation(request, checkUser);
-        }
+       try {
+           if (session.getAttribute("user") == null || user.getId() == 0) {
+               isValidation(request, checkUser);
+               user = userDAO.getByName(user.getUserName());
+               if (user != null) {
+                   session.setAttribute("user", user);
+                   session.setAttribute("name", user.getUserName());
+               }
+           } else {
+               isValidation(request, checkUser);
+           }
+       } catch (LoginException e) {
+           RequestDispatcher requestDispatcher = servletRequest.getRequestDispatcher("WEB-INF/error.jsp");
+           requestDispatcher.forward(servletRequest, servletResponse);
+       }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

@@ -15,12 +15,13 @@ import jakarta.servlet.http.HttpSession;
 import validation.CheckUser;
 import validation.ValidationAuth;
 
+import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet(name = "RegistrationServlet",
         urlPatterns = {"/registration"})
 public class RegistrationServlet extends HttpServlet {
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/add.jsp");
@@ -48,6 +49,9 @@ public class RegistrationServlet extends HttpServlet {
                 String error = String.valueOf(e.getMessage());
                 req.setAttribute("error", error);
                 RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/add.jsp");
+                requestDispatcher.forward(req, resp);
+            } catch (PropertyVetoException | SQLException e) {
+                RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/error.jsp");
                 requestDispatcher.forward(req, resp);
             }
             ServletContext context = getServletContext();

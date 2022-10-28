@@ -15,7 +15,9 @@ import jakarta.servlet.http.HttpSession;
 import validation.CheckUser;
 import validation.ValidationAuth;
 
+import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet(name = "UpDateServlet",
         urlPatterns = "/upDate")
@@ -40,14 +42,20 @@ public class UpDateServlet extends HttpServlet {
         UserDAO userDAO = new UserDAOImpl();
         HttpSession session = req.getSession();
         User userSession = (User) session.getAttribute("user");
-        User userSQLData;
+        User userSQLData = null;
         String name = req.getParameter("userName");
         String email = req.getParameter("email");
         String pass = req.getParameter("password");
         String pass2 = req.getParameter("password2");
-        userSQLData = userDAO.get((Long) session.getAttribute("id"));
+        try {
+            userSQLData = userDAO.get((Long) session.getAttribute("id"));
+        } catch (PropertyVetoException | SQLException | LoginException e) {
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/error.jsp");
+            requestDispatcher.forward(req, resp);
+        }
         if (req.getAttribute("error") == null) {
             try {
+                assert userSQLData != null;
                 updateDataByUser(userDAO, name, email, pass, pass2, userSQLData);
                 setRole(userDAO, userSQLData, userSession, session);
                 session.removeAttribute("id");
@@ -59,6 +67,9 @@ public class UpDateServlet extends HttpServlet {
                 req.setAttribute("error", error);
                 RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/upDate.jsp");
                 rd.forward(req, resp);
+            } catch (PropertyVetoException | SQLException e) {
+                RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/error.jsp");
+                requestDispatcher.forward(req, resp);
             }
         } else {
             RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/upDate.jsp");
@@ -67,7 +78,8 @@ public class UpDateServlet extends HttpServlet {
     }
 
     private void updateDataByUser(UserDAO userDAO, String name, String email,
-                                  String pass, String pass2, User userSQLData) throws LoginException {
+                                  String pass, String pass2, User userSQLData)
+            throws LoginException, PropertyVetoException, SQLException {
         if (!userSQLData.getUserName().equals(name)) {
             userSQLData.setUserName(name);
             userDAO.update(userSQLData.getId(), "name", name);
@@ -91,7 +103,8 @@ public class UpDateServlet extends HttpServlet {
         }
     }
 
-    private void setRole(UserDAO userDAO, User userSQLData, User userSession, HttpSession session) throws LoginException {
+    private void setRole(UserDAO userDAO, User userSQLData, User userSession, HttpSession session)
+            throws LoginException, PropertyVetoException, SQLException {
         if (userDAO.getRole(userSQLData).equals("admin") ||
                 userDAO.getRole(userSession).equals("admin")) {
             if (userSession.getId() == (userSQLData.getId())) {
