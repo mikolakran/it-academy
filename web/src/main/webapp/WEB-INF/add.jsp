@@ -38,7 +38,7 @@
             </c:if>
             <form method="post" class="form-horizontal" action="registration">
                 <small>
-                    <span class="heading ">Input</span>
+                    <span class="heading ">Registration</span>
                 </small>
                 <div class="form-group">
                     <input type="text" class="form-control" name="userName"  placeholder="Login">
@@ -59,12 +59,12 @@
                   <i class="fa fa-user"></i>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default" >Далее</button>
+                    <button type="submit" class="btn btn-default" onclick="location.href='${pageContext.request.contextPath}/registration'">Далее</button>
                 </div>
             </form>
         </div>
 
-    </div><!-- /.row -->
-</div><!-- /.container -->
+    </div>
+</div>
 </body>
 </html>

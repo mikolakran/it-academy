@@ -15,7 +15,6 @@
     <name>web Maven Webapp</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
-
     <dependencies>
         <dependency>
             <groupId>org.example</groupId>
@@ -24,5 +23,4 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
 </project>

@@ -36,12 +36,12 @@
             <h1 id="h1r" class=" text-center" >Welcome</h1>
             <div class="container-fluid" >
 
-                <c:if test="${userName!=null}">
-                    <h3 style="color: deepskyblue">Hello ${userName}</h3>
+                <c:if test="${name!=null}">
+                    <h3 style="color: deepskyblue">Hello ${name}</h3>
                 </c:if>
             </div>
             <div class="container-fluid">
-                <a href="${pageContext.request.contextPath}/upDate?id=${user.id}" class="btn btn-primary" >Update</a>
+                <a href="${pageContext.request.contextPath}/upDate?idUser=${user.id}" class="btn btn-primary" >Update</a>
                 <c:if test="${role == 'admin'}">
                     <a href="${pageContext.request.contextPath}/users" class="btn btn-primary" >Your users</a>
                 </c:if>

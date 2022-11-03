@@ -21,7 +21,7 @@
             </div>
             <div>
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="${pageContext.request.contextPath}/home">Главная</a> </li>
+                    <li class="active"><a href="#">Главная</a> </li>
                     <li ><a href="#">О нас</a> </li>
                     <li><a href="#">Обратная связь</a> </li>
                     <li><a href="#">Registration</a> </li>
@@ -38,7 +38,7 @@
             </c:if>
             <form method="post" class="form-horizontal" action="upDate">
                 <small>
-                    <span class="heading ">Input</span>
+                    <span class="heading ">UpDate</span>
                 </small>
                 <div class="form-group">
                     <input type="text" class="form-control" name="userName"
@@ -68,11 +68,11 @@
                 <c:if test="${role == 'admin'}">
                     <a href="${pageContext.request.contextPath}/users" class="btn btn-primary" >Your users</a>
                 </c:if>
-                <a href="${pageContext.request.contextPath}/hello" class="btn btn-primary">welcome</a>
+                <a href="${pageContext.request.contextPath}/welcome" class="btn btn-primary">welcome</a>
             </form>
         </div>
 
-    </div><!-- /.row -->
-</div><!-- /.container -->
+    </div>
+</div>
 </body>
 </html>
