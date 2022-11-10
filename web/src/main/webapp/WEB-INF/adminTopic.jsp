@@ -21,7 +21,7 @@
             </div>
             <div>
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="${pageContext.request.contextPath}/home">Главная</a> </li>
+                    <li class="active"><a href="#">Главная</a> </li>
                     <li ><a href="#">О нас</a> </li>
                     <li><a href="#">Обратная связь</a> </li>
                     <li><a href="#">Registration</a> </li>
@@ -36,31 +36,21 @@
             <c:if test="${error!=null}">
                 <h4 style=" color: red" >${error}</h4>
             </c:if>
-            <form method="post" class="form-horizontal" action="registration">
+            <form method="post" class="form-horizontal" action="adminTopic">
                 <small>
-                    <span class="heading ">Registration</span>
+                    <span class="heading ">Add Topic</span>
                 </small>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="userName"  placeholder="Login">
+                    <input type="text" class="form-control" name="adminTopic"  placeholder="name topic">
                     <i class="fa fa-user"></i>
-                </div>
-                <div class="form-group help">
-                    <input type="password" class="form-control" name="password"  placeholder="Password">
-                    <i class="fa fa-lock"></i>
-                    <a href="#" class="fa fa-question-circle"></a>
-                </div>
-                <div class="form-group help">
-                    <input type="password" class="form-control" name="password2"  placeholder="Password">
-                    <i class="fa fa-lock"></i>
-                    <a href="#" class="fa fa-question-circle"></a>
-                </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" name="email"  placeholder="E-mail">
-                  <i class="fa fa-user"></i>
+                    <button type="submit" class="btn btn-default" >Add Topic</button>
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-default" onclick="${pageContext.request.contextPath}/registration'">Далее</button>
-                </div>
+                <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
+                <c:if test="${role == 'admin'}">
+                    <a href="${pageContext.request.contextPath}/users" class="btn btn-primary" >Your users</a>
+                </c:if>
+                <a href="${pageContext.request.contextPath}/welcome" class="btn btn-primary">welcome</a>
             </form>
         </div>
 

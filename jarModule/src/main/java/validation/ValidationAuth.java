@@ -9,7 +9,7 @@ public interface ValidationAuth {
 
     void validationName(String passOrUserName) throws LoginException;
 
-    void validationEmail(String email) throws LoginException;
+    boolean validationEmail(String email) throws LoginException;
 
     boolean validationSQL(Exception e) throws LoginException;
 }

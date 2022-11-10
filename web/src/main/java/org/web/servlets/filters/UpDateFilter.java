@@ -3,14 +3,13 @@ package org.web.servlets.filters;
 import dao.UserDAO;
 import dao.impl.UserDAOImpl;
 import entity.User;
-import exception.LoginException;
+import exception.CatchingCauseException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import java.beans.PropertyVetoException;
+
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebFilter(servletNames = {"UpDateServlet"})
 public class UpDateFilter implements Filter {
@@ -52,7 +51,7 @@ public class UpDateFilter implements Filter {
 
                }
            }
-       } catch (PropertyVetoException | SQLException | LoginException e) {
+       } catch (CatchingCauseException e) {
            RequestDispatcher requestDispatcher = servletRequest.getRequestDispatcher("WEB-INF/error.jsp");
            requestDispatcher.forward(servletRequest, servletResponse);
        }
