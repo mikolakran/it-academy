@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
            prefix="c" %>
 <%@ taglib prefix="fmt"
-           uri="http://java.sun.com/jsp/jstl/fmt"%>
+           uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -28,29 +28,53 @@
         </div>
     </nav>
 </header>
-<div class="container-fluid" >
-    <div id="men-left" class="rad col-md-2" ></div>
-    <div class="col-md-2" ></div>
-    <div  class=" col-md-4">
+<div class="container-fluid">
+    <div id="men-left" class="rad col-md-2"></div>
+    <div class="col-md-2"></div>
+    <div class=" col-md-4">
         <div>
-            <h1 id="h1r" class=" text-center" >Welcome</h1>
-            <div class="container-fluid" >
-
+            <h1 id="h1r" class=" text-center">Welcome</h1>
+            <c:if test="${role == 'admin'}">
+                <c:if test="${topicNull!=null}">
+                    <h3 class="text-center">${topicNull}</h3>
+                </c:if>
+                <c:if test="${topicNull==null}">
+                    <h2 class="text-center">All Topic</h2>
+                </c:if>
+                <c:forEach var="topic" items="${topicList}">
+                    <ul>
+                        <li>${topic.nameTopic}
+                            <a href="${pageContext.request.contextPath}/welcome?idAdminTopic=${topic.id}"
+                               class="btn btn-primary"> Delete</a></li>
+                    </ul>
+                </c:forEach>
+            </c:if>
+            <div class="container-fluid">
                 <c:if test="${name!=null}">
                     <h3 style="color: deepskyblue">Hello ${name}</h3>
                 </c:if>
             </div>
             <div class="container-fluid">
-                <a href="${pageContext.request.contextPath}/upDate?idUser=${user.id}" class="btn btn-primary" >Update</a>
                 <c:if test="${role == 'admin'}">
-                    <a href="${pageContext.request.contextPath}/users" class="btn btn-primary" >Your users</a>
+                    <a href="${pageContext.request.contextPath}/adminTopic" class="btn btn-primary">Add Topic</a>
+                    <a href="${pageContext.request.contextPath}/users" class="btn btn-primary">Your users</a>
                 </c:if>
-                <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary" >logout</a>
+                <c:if test="${role == 'user'}">
+                    <select name="idUserTopic">
+                    <c:forEach var="topic" items="${topics}">
+                        <option value="<c:out value="${topic.id}"/>">
+                            <c:out value="${topic.nameTopic}"/>
+                        </option>
+                    </c:forEach>
+                    </select>
+                </c:if>
+                <a href="${pageContext.request.contextPath}/upDate?idUser=${user.id}" class="btn btn-primary">Update</a>
+                <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">logout</a>
             </div>
         </div>
     </div>
-    <div class="col-md-2" ></div>
-    <div class="col-md-2" ></div>
+    <div class="col-md-2"></div>
+    <div class="col-md-2"></div>
 </div>
 
 </body>

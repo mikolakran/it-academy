@@ -1,12 +1,13 @@
 package dao;
 
+import entity.Topic;
 import entity.User;
-import exception.LoginException;
+import exception.CatchingCauseException;
 
 import java.util.List;
 
 public interface UserDAO extends DAO<User>{
-    User getByName(String name) throws LoginException;
-    List<User> getListUsers() throws LoginException;
+    User getByName(String name) throws CatchingCauseException;
+    List<User> getListUsers() throws CatchingCauseException;
     String getRole(User user);
 }

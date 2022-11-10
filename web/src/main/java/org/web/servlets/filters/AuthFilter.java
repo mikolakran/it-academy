@@ -3,6 +3,7 @@ package org.web.servlets.filters;
 import dao.UserDAO;
 import dao.impl.UserDAOImpl;
 import entity.User;
+import exception.CatchingCauseException;
 import exception.LoginException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -26,19 +27,17 @@ public class AuthFilter implements Filter {
         HttpSession session = request.getSession();
         UserDAO userDAO = new UserDAOImpl();
         ValidationAuth checkUser = new CheckUser();
-        user = (User) session.getAttribute("user");
-       try {
-           if (session.getAttribute("user") == null || user.getId() == 0) {
+            user = (User) session.getAttribute("user");
+        try {
+           if (session.getAttribute("user") == null || user == null) {
                isValidation(request, checkUser);
                user = userDAO.getByName(user.getUserName());
-               if (user != null) {
                    session.setAttribute("user", user);
                    session.setAttribute("name", user.getUserName());
-               }
            } else {
                isValidation(request, checkUser);
            }
-       } catch (LoginException e) {
+       } catch (CatchingCauseException e) {
            RequestDispatcher requestDispatcher = servletRequest.getRequestDispatcher("WEB-INF/error.jsp");
            requestDispatcher.forward(servletRequest, servletResponse);
        }

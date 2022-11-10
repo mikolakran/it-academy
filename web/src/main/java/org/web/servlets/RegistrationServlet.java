@@ -3,6 +3,7 @@ package org.web.servlets;
 import dao.UserDAO;
 import dao.impl.UserDAOImpl;
 import entity.User;
+import exception.CatchingCauseException;
 import exception.LoginException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
@@ -15,9 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import validation.CheckUser;
 import validation.ValidationAuth;
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet(name = "RegistrationServlet",
         urlPatterns = {"/registration"})
@@ -50,7 +49,7 @@ public class RegistrationServlet extends HttpServlet {
                 req.setAttribute("error", error);
                 RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/add.jsp");
                 requestDispatcher.forward(req, resp);
-            } catch (PropertyVetoException | SQLException e) {
+            } catch (CatchingCauseException e) {
                 RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/error.jsp");
                 requestDispatcher.forward(req, resp);
             }

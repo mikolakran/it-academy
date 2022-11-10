@@ -1,22 +1,75 @@
 package entity;
 
-import java.util.Objects;
+import jakarta.persistence.*;
 
-public class User {
-    private long id;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
+
+
+@Entity
+@Table(name = "user")
+@NamedQueries({
+        @NamedQuery(name = "getByUserName", query = "select u from User u where u.userName = :name"),
+        @NamedQuery(name = "getAllUser",query = "select u from User u")
+})
+/*@NamedQuery(name = "getByUserName", query = "select u from User u where u.userName = :name")*/
+public class User implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id; //
+    @Column(name = "name", unique = true, nullable = false, length = 55)
     private String userName;
+    @Column(name = "password", nullable = false, length = 55)
     private String password;
+    @Column(name = "email", unique = true, nullable = false, length = 55)
     private String email;
+    @Column(name = "role", nullable = false, length = 55)
     private String role;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_topic",
+            joinColumns = {@JoinColumn(name = "userId")},
+            inverseJoinColumns = {@JoinColumn(name = "topicId")}
+    )
+    private List<Topic> topic;
 
     public User() {
     }
 
-    public User(String username, String password, String email, String role) {
-        this.userName = username;
+    public User(long id, String userName, String password, String email, String role) {
+        this.id = id;
+        this.userName = userName;
         this.password = password;
         this.email = email;
         this.role = role;
+    }
+
+    public User(String userName, String password, String email, String role) {
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUserName() {
@@ -35,14 +88,6 @@ public class User {
         this.password = password;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -59,37 +104,11 @@ public class User {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "    \""+id+"\" : {\n" +
-                "      \"id\" : \""+id+"\"\n" +
-                "      \"userName\" : \""+ userName +"\"\n" +
-                "      \"password\" : \""+password+"\"\n" +
-                "      \"email\" : \""+email+"\"\n" +
-                "      \"role\" : \""+role+"\"\n" +
-                "    },";
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        if (id != user.id) return false;
-        if (!Objects.equals(userName, user.userName)) return false;
-        if (!Objects.equals(password, user.password)) return false;
-        if (!Objects.equals(email, user.email)) return false;
-        return Objects.equals(role, user.role);
+    public List<Topic> getTopic() {
+        return topic;
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (userName != null ? userName.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (role != null ? role.hashCode() : 0);
-        return result;
+    public void addTopic(List<Topic> topic) {
+        this.topic = topic;
     }
 }

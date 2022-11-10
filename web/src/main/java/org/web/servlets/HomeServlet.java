@@ -1,7 +1,10 @@
 package org.web.servlets;
 
 
+import dao.TopicDAO;
+import dao.impl.TopicDAOImpl;
 import entity.User;
+import exception.CatchingCauseException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -26,6 +29,7 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
+        TopicDAO topicDAO = new TopicDAOImpl();
         String pass = req.getParameter("password");
         User user;
         user = (User) session.getAttribute("user");
