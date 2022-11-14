@@ -1,8 +1,11 @@
-package org.web.servlets;
+package org.web.servlets.auth;
 
+import dao.TopicDAO;
 import dao.UserDAO;
+import dao.impl.TopicDAOImpl;
 import dao.impl.UserDAOImpl;
 import entity.User;
+import exception.CatchingCauseException;
 import exception.LoginException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
@@ -15,9 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import validation.CheckUser;
 import validation.ValidationAuth;
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet(name = "UpDateServlet",
         urlPatterns = "/upDate")
@@ -30,7 +31,7 @@ public class UpDateServlet extends HttpServlet {
         if (idUser != null && session.getAttribute("name") != null) {
             long id = Long.parseLong(idUser);
             session.setAttribute("id", id);
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/upDate.jsp");
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/auth/upDate.jsp");
             requestDispatcher.forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/home");
@@ -49,8 +50,8 @@ public class UpDateServlet extends HttpServlet {
         String pass2 = req.getParameter("password2");
         try {
             userSQLData = userDAO.get((Long) session.getAttribute("id"));
-        } catch (PropertyVetoException | SQLException | LoginException e) {
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/error.jsp");
+        } catch (CatchingCauseException e) {
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/auth/error.jsp");
             requestDispatcher.forward(req, resp);
         }
         if (req.getAttribute("error") == null) {
@@ -59,56 +60,59 @@ public class UpDateServlet extends HttpServlet {
                 updateDataByUser(userDAO, name, email, pass, pass2, userSQLData);
                 setRole(userDAO, userSQLData, userSession, session);
                 session.removeAttribute("id");
+                TopicDAO topicDAO = new TopicDAOImpl();
+                req.setAttribute("topicList", topicDAO.getListTopic(userSQLData.getId()));
                 ServletContext context = getServletContext();
                 RequestDispatcher dispatcher = context.getRequestDispatcher("/welcome");
                 dispatcher.forward(req, resp);
             } catch (LoginException e) {
                 String error = String.valueOf(e.getMessage());
                 req.setAttribute("error", error);
-                RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/upDate.jsp");
+                RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/auth/upDate.jsp");
                 rd.forward(req, resp);
-            } catch (PropertyVetoException | SQLException e) {
-                RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/error.jsp");
+            } catch (CatchingCauseException e) {
+                RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/auth/error.jsp");
                 requestDispatcher.forward(req, resp);
             }
         } else {
-            RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/upDate.jsp");
+            RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/auth/upDate.jsp");
             rd.forward(req, resp);
         }
     }
 
     private void updateDataByUser(UserDAO userDAO, String name, String email,
                                   String pass, String pass2, User userSQLData)
-            throws LoginException, PropertyVetoException, SQLException {
+            throws CatchingCauseException, LoginException {
         if (!userSQLData.getUserName().equals(name)) {
             userSQLData.setUserName(name);
-            userDAO.update(userSQLData.getId(), "name", name);
+            userDAO.update(userSQLData);
         }
         if (!pass2.equals("")) {
             if (!userSQLData.getPassword().equals(pass2)) {
                 ValidationAuth checkUserInterface = new CheckUser();
                 checkUserInterface.validationPassword(pass2);
                 userSQLData.setPassword(pass2);
-                userDAO.update(userSQLData.getId(), "password", pass2);
+                userDAO.update(userSQLData);
             }
         } else {
             if (!userSQLData.getPassword().equals(pass)) {
                 userSQLData.setPassword(pass);
-                userDAO.update(userSQLData.getId(), "password", pass);
+                userDAO.update(userSQLData);
             }
         }
         if (!userSQLData.getEmail().equals(email)) {
             userSQLData.setEmail(email);
-            userDAO.update(userSQLData.getId(), "email", email);
+            userDAO.update(userSQLData);
         }
     }
 
     private void setRole(UserDAO userDAO, User userSQLData, User userSession, HttpSession session)
-            throws LoginException, PropertyVetoException, SQLException {
+            throws CatchingCauseException, LoginException {
         if (userDAO.getRole(userSQLData).equals("admin") ||
                 userDAO.getRole(userSession).equals("admin")) {
             if (userSession.getId() == (userSQLData.getId())) {
-                userDAO.update(userSQLData.getId(), "role", userDAO.getRole(userSQLData));
+                userSQLData.setRole(userSQLData.getRole());
+                userDAO.update(userSQLData);
                 userSQLData = userDAO.get(userSQLData.getId());
                 session.removeAttribute("user");
                 session.setAttribute("user", userSQLData);

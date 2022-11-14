@@ -1,4 +1,4 @@
-package org.web.servlets;
+package org.web.servlets.auth;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;

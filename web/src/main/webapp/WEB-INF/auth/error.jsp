@@ -31,7 +31,7 @@
     </nav>
 </header>
 <div class="container-fluid">
-    <img src="image/2.jfif" style="width:100%">
+    <img src="../image/2.jfif" style="width:100%">
 </div>
 </body>
 </html>

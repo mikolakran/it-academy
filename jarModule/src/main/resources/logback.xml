@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-8level %-25d{YYYY-MM-dd HH:mm:ss.SSS} %logger - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -24,11 +22,14 @@
             <MaxFileSize>1MB</MaxFileSize>
         </triggeringPolicy>
     </appender>
-
-    <logger name="it-academy.web" level="DEBUG"/>
-    <logger name="it-academy" level="DEBUG"/>
-
-    <root level="ERROR">
-        <appender-ref ref="FILE" />
+    <logger name="org.hibernate" level="INFO"/>
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
+    <logger name="org.hibernate.stat" level="DEBUG"/>
+    <logger name="org.hibernate.SQL_SLOW" level="INFO"/>
+    <logger name="org.hibernate.cache" level="DEBUG"/>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>
