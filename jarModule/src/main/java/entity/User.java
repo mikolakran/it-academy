@@ -37,6 +37,7 @@ public class User implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "topicId")}
     )
     private Set<Topic> topic;
+
     @OneToMany(mappedBy = "user")
     private Set<Post> post;
 

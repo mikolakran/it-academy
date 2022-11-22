@@ -2,6 +2,7 @@ package dao.impl;
 
 import connector.AbstractJPADAO;
 import dao.TopicDAO;
+import entity.Post;
 import entity.Topic;
 import entity.User;
 import exception.CatchingCauseException;
@@ -91,6 +92,13 @@ public class TopicDAOImpl extends AbstractJPADAO implements TopicDAO {
 
     public void deleteTopic(long idUser, long idTopic) throws CatchingCauseException {
         try {
+            PostDAOImpl postDAO = new PostDAOImpl();
+            Set<Post> listByIdUserPost = postDAO.getListByIdUserPost(idTopic, idUser);
+            if (listByIdUserPost.size()!=0){
+                for (Post post:listByIdUserPost) {
+                    postDAO.delete(post.getId());
+                }
+            }
             init();
             User user = entityManager.find(User.class, idUser);
             user.getTopic().removeIf(topic -> topic.getId() == idTopic);
