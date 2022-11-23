@@ -1,4 +1,4 @@
-package org.web.servlets;
+package org.web.servlets.auth;
 
 import dao.UserDAO;
 import dao.impl.UserDAOImpl;
@@ -22,7 +22,7 @@ public class WelcomeServlet extends HttpServlet {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         if (user != null) {
-            setNameAndRoleUser(req,resp, user);
+            setNameAndRoleUser(req, resp, user);
         } else {
             resp.sendRedirect(req.getContextPath() + "/home");
         }
@@ -40,7 +40,7 @@ public class WelcomeServlet extends HttpServlet {
         UserDAO userDAO = new UserDAOImpl();
         req.setAttribute("name", user.getUserName());
         req.setAttribute("role", userDAO.getRole(user));
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/welcome.jsp");
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/auth/welcome.jsp");
         requestDispatcher.forward(req, resp);
     }
 }

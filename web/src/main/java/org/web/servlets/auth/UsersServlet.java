@@ -1,4 +1,4 @@
-package org.web.servlets;
+package org.web.servlets.auth;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -20,7 +20,7 @@ public class UsersServlet extends HttpServlet {
         if (session.getAttribute("name") == null) {
             resp.sendRedirect(req.getContextPath() + "/home");
         } else {
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/users.jsp");
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/auth/users.jsp");
             requestDispatcher.forward(req, resp);
         }
     }

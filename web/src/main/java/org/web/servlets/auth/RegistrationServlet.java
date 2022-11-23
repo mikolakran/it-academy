@@ -1,8 +1,11 @@
-package org.web.servlets;
+package org.web.servlets.auth;
 
+import dao.TopicDAO;
 import dao.UserDAO;
+import dao.impl.TopicDAOImpl;
 import dao.impl.UserDAOImpl;
 import entity.User;
+import exception.CatchingCauseException;
 import exception.LoginException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
@@ -15,16 +18,14 @@ import jakarta.servlet.http.HttpSession;
 import validation.CheckUser;
 import validation.ValidationAuth;
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet(name = "RegistrationServlet",
         urlPatterns = {"/registration"})
 public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/add.jsp");
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/auth/add.jsp");
         requestDispatcher.forward(req, resp);
     }
 
@@ -45,20 +46,27 @@ public class RegistrationServlet extends HttpServlet {
                 userDAO.save(user);
                 session.setAttribute("user", userDAO.getByName(user.getUserName()));
                 session.setAttribute("name", user.getUserName());
+                TopicDAO topicDAO = new TopicDAOImpl();
+                user = userDAO.getByName(user.getUserName());
+                if (topicDAO.getListTopic(user.getId()).size() != 0) {
+                    req.setAttribute("topicList", topicDAO.getListTopic(user.getId()));
+                } else {
+                    req.setAttribute("topicNull", "Topics null");
+                }
             } catch (LoginException e) {
                 String error = String.valueOf(e.getMessage());
                 req.setAttribute("error", error);
-                RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/add.jsp");
+                RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/auth/add.jsp");
                 requestDispatcher.forward(req, resp);
-            } catch (PropertyVetoException | SQLException e) {
-                RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/error.jsp");
+            } catch (CatchingCauseException e) {
+                RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/auth/error.jsp");
                 requestDispatcher.forward(req, resp);
             }
             ServletContext context = getServletContext();
             RequestDispatcher dispatcher = context.getRequestDispatcher("/welcome");
             dispatcher.forward(req, resp);
         } else {
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/add.jsp");
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("WEB-INF/auth/add.jsp");
             requestDispatcher.forward(req, resp);
         }
     }

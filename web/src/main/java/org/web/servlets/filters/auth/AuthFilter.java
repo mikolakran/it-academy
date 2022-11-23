@@ -1,8 +1,9 @@
-package org.web.servlets.filters;
+package org.web.servlets.filters.auth;
 
 import dao.UserDAO;
 import dao.impl.UserDAOImpl;
 import entity.User;
+import exception.CatchingCauseException;
 import exception.LoginException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -27,21 +28,19 @@ public class AuthFilter implements Filter {
         UserDAO userDAO = new UserDAOImpl();
         ValidationAuth checkUser = new CheckUser();
         user = (User) session.getAttribute("user");
-       try {
-           if (session.getAttribute("user") == null || user.getId() == 0) {
-               isValidation(request, checkUser);
-               user = userDAO.getByName(user.getUserName());
-               if (user != null) {
-                   session.setAttribute("user", user);
-                   session.setAttribute("name", user.getUserName());
-               }
-           } else {
-               isValidation(request, checkUser);
-           }
-       } catch (LoginException e) {
-           RequestDispatcher requestDispatcher = servletRequest.getRequestDispatcher("WEB-INF/error.jsp");
-           requestDispatcher.forward(servletRequest, servletResponse);
-       }
+        try {
+            if (session.getAttribute("user") == null || user == null) {
+                isValidation(request, checkUser);
+                user = userDAO.getByName(user.getUserName());
+                session.setAttribute("user", user);
+                session.setAttribute("name", user.getUserName());
+            } else {
+                isValidation(request, checkUser);
+            }
+        } catch (CatchingCauseException e) {
+            RequestDispatcher requestDispatcher = servletRequest.getRequestDispatcher("WEB-INF/auth/error.jsp");
+            requestDispatcher.forward(servletRequest, servletResponse);
+        }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

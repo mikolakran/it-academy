@@ -1,8 +1,8 @@
-package org.web.servlets.filters;
+package org.web.servlets.filters.auth;
 
 import dao.UserDAO;
 import dao.impl.UserDAOImpl;
-import exception.LoginException;
+import exception.CatchingCauseException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,8 +26,8 @@ public class UsersFilter implements Filter {
                 request.setAttribute("userNull", "Sorry your not lucky");
             }
             request.setAttribute("list", userDAO.getListUsers());
-        } catch (LoginException e) {
-            RequestDispatcher requestDispatcher = servletRequest.getRequestDispatcher("WEB-INF/error.jsp");
+        } catch (CatchingCauseException e) {
+            RequestDispatcher requestDispatcher = servletRequest.getRequestDispatcher("WEB-INF/auth/error.jsp");
             requestDispatcher.forward(servletRequest, servletResponse);
         }
         filterChain.doFilter(servletRequest, servletResponse);
