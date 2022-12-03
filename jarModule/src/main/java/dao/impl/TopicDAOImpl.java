@@ -41,7 +41,7 @@ public class TopicDAOImpl extends AbstractJPADAO implements TopicDAO {
     }
 
     @Override
-    public Topic get(long id) throws CatchingCauseException {
+    public Topic get(Long id) throws CatchingCauseException {
         Topic topic;
         try {
             init();
@@ -77,7 +77,7 @@ public class TopicDAOImpl extends AbstractJPADAO implements TopicDAO {
     }
 
     @Override
-    public void delete(long id) throws CatchingCauseException {
+    public void delete(Long id) throws CatchingCauseException {
         try {
             init();
             entityManager.remove(entityManager.find(Topic.class, id));

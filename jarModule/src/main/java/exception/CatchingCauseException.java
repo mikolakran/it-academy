@@ -9,7 +9,7 @@ public class CatchingCauseException extends Exception {
     }
 
     public static void findPathToCause(PersistenceException e) throws CatchingCauseException {
-        Throwable cause = e.getCause();
+        Throwable cause = e.getCause() ;
         while (true) {
             if (cause.getCause() != null) {
                 cause = cause.getCause();

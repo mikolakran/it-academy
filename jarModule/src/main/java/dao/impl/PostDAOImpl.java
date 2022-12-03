@@ -40,7 +40,7 @@ public class PostDAOImpl extends AbstractJPADAO implements PostDAO {
     }
 
     @Override
-    public Post get(long id) throws CatchingCauseException {
+    public Post get(Long id) throws CatchingCauseException {
         Post post;
         try {
             init();
@@ -76,7 +76,7 @@ public class PostDAOImpl extends AbstractJPADAO implements PostDAO {
     }
 
     @Override
-    public void delete(long id) throws CatchingCauseException {
+    public void delete(Long id) throws CatchingCauseException {
         try {
             init();
             entityManager.remove(entityManager.find(Post.class, id));

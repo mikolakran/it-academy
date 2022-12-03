@@ -5,7 +5,7 @@ import exception.CatchingCauseException;
 
 import java.util.Set;
 
-public interface TopicDAO extends DAO<Topic> {
+public interface TopicDAO extends DAO<Topic,Long> {
 
     Set<Topic> getListTopic(long id) throws CatchingCauseException;
 

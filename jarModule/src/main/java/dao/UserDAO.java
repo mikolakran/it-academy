@@ -5,7 +5,7 @@ import exception.CatchingCauseException;
 
 import java.util.List;
 
-public interface UserDAO extends DAO<User> {
+public interface UserDAO extends DAO<User,Long> {
     User getByName(String name) throws CatchingCauseException;
 
     List<User> getListUsers() throws CatchingCauseException;
