@@ -4,13 +4,14 @@ import configurations.AppConfig;
 import dao.UserDAO;
 import entity.User;
 import exception.CatchingCauseException;
-import exception.LoginException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -25,19 +26,50 @@ public class UserDAOImplTest {
 
     @Before
     public void setUp() {
-        user = new User("Nikolai9", "1234", "mikola9@mail.ru", "user");
+        user = new User("Nikolai10", "1234", "mikola10@mail.ru", "user");
     }
 
     @Test
-//    @Ignore
-    public void save() {
+    public void getByName() {
         try {
-            userDAO.save(user);
-        } catch (LoginException | CatchingCauseException  e) {
-            System.out.println("e.getMessage() = " + e.getMessage());
-            System.out.println("e = ");
+            List<User> listUsers = userDAO.getListUsers();
+            listUsers.forEach(user1 -> {
+                if (user1.getUserName().equals(user.getUserName())){
+                    user = user1;
+                }
+            });
+            assertEquals(user.toString(),userDAO.getByName("Nikolai10").toString());
+        } catch (CatchingCauseException e) {
+            throw new RuntimeException(e);
         }
-//        assertThrows(LoginException.class,()-> userDAO.save(user));
-//        assertThrows(CatchingCauseException.class,()-> userDAO.save(user));
+    }
+
+    @Test
+    public void getListUsers() {
+        try {
+            assertNotNull(userDAO.getListUsers());
+        } catch (CatchingCauseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getRoleData() {
+        try {
+            assertEquals("admin",userDAO.getRoleData("admin").getRole());
+        } catch (CatchingCauseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getRoleUser() {
+        assertEquals("user",userDAO.getRole(user));
+    }
+
+    @Test
+    public void getRoleAdmin() {
+        user.setEmail("mikolakran@gmail.com");
+        assertEquals("admin",userDAO.getRole(user));
     }
 }

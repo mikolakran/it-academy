@@ -43,10 +43,14 @@ public class AppConfig {
     @Bean
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dMD = new DriverManagerDataSource();
-        dMD.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dMD.setUrl("jdbc:mysql://localhost:3306/it-academy");
-        dMD.setUsername("root");
-        dMD.setPassword("");
+        String driver = "com.mysql.cj.jdbc.Driver";
+        dMD.setDriverClassName(driver);
+        String url = "jdbc:mysql://localhost:3306/it-academy";
+        dMD.setUrl(url);
+        String user = "root";
+        dMD.setUsername(user);
+        String password = "";
+        dMD.setPassword(password);
         return dMD;
     }
 
