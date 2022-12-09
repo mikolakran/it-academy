@@ -12,6 +12,11 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "topic")
+@NamedQueries({
+        @NamedQuery(name = "getByTopicName", query = "select t from Topic t where t.nameTopic = :name"),
+        @NamedQuery(name = "getAllTopic", query = "SELECT u FROM User u LEFT JOIN FETCH u.topic  where u.id = : id"),
+        @NamedQuery(name = "getAllTopicUsers", query = "SELECT t FROM Topic t LEFT JOIN FETCH t.users  where t.id = : id")
+})
 public class Topic implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +25,7 @@ public class Topic implements Serializable {
     @Column(name = "nameTopic", unique = true, nullable = false, length = 55)
     private String nameTopic;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "user_topic",
             joinColumns = {@JoinColumn(name = "topicId")},

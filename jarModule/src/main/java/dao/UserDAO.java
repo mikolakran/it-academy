@@ -1,16 +1,17 @@
 package dao;
 
 import entity.User;
-import exception.CatchingCauseException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserDAO extends DAO<User,Long> {
-    User getByName(String name) throws CatchingCauseException;
+    User getByName(String name);
+    User getByEmail(String email);
 
-    List<User> getListUsers() throws CatchingCauseException;
+    List<User> getListUsers();
 
-    User getRoleData(String idAdmin) throws CatchingCauseException;
+    Set<User> getListUsersWhereIdTopic(long id);
 
     String getRole(User user);
 }

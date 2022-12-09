@@ -3,22 +3,22 @@ package dao.impl;
 
 import dao.BaseDAO;
 import dao.UserDAO;
+import entity.Topic;
 import entity.User;
-import exception.CatchingCauseException;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceException;
+import exception.LoginException;
+import exception.MyException;
 import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import validation.CheckSQL;
 
-
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
-public class UserDAOImpl extends BaseDAO<User,Long> implements UserDAO {
+public class UserDAOImpl extends BaseDAO<User, Long> implements UserDAO {
 
     public UserDAOImpl() {
         super();
@@ -26,49 +26,81 @@ public class UserDAOImpl extends BaseDAO<User,Long> implements UserDAO {
     }
 
     @Override
-    public User getByName(String name) throws CatchingCauseException {
-        User user = new User();
-        try {
-            TypedQuery<User> typedQuery = entityManager.createNamedQuery("getByUserName", User.class).
-                    setParameter("name", name);
-            user = typedQuery.getSingleResult();
-        } catch (NoResultException ignored) {
-        } catch (PersistenceException e) {
-            log.error("UserDAOImpl.getByName", e);
-            throw new CatchingCauseException(e);
+    public void save(User user) throws MyException {
+        log.trace("UserDAOImpl.save(User user) " + user);
+        new CheckSQL.Builder().validationName(user.getUserName()).validationEmail(user.getEmail()).
+                validationPassword(user.getPassword()).build();
+        validationSQL(user);
+        super.save(user);
+    }
+
+    @Override
+    public User get(Long aLong) {
+        log.trace("UserDAOImpl.get(Long aLong) " + aClass + " with id = " + aLong);
+        return super.get(aLong);
+    }
+
+    @Override
+    public void update(User user) throws MyException {
+        new CheckSQL.Builder().validationName(user.getUserName()).validationEmail(user.getEmail()).
+                validationPassword(user.getPassword()).isUpdateUserPossibly(user, getListUsers()).build();
+        log.trace("UserDAOImpl.update(User user) user = " + user);
+        super.update(user);
+    }
+
+    @Override
+    public void delete(Long aLong) {
+        log.trace("UserDAOImpl.delete(Long aLong) aLong = " + aLong);
+        super.delete(aLong);
+    }
+
+    @Override
+    public User getByName(String name) {
+        User user = null;
+        TypedQuery<User> typedQuery = entityManager.createNamedQuery("getByUserName", User.class).
+                setParameter("name", name);
+        List<User> resultList = typedQuery.getResultList();
+        if (resultList.size() != 0) {
+            for (User user1 : resultList) {
+                user = user1;
+            }
         }
+        log.trace("UserDAOImpl.getByName(String name) name = " + name + " in user = " + user);
         return user;
     }
 
     @Override
-    public List<User> getListUsers() throws CatchingCauseException {
-        List<User> users;
-        try {
-            TypedQuery<User> typedQuery = entityManager.createNamedQuery("getAllUser", User.class);
-            users = typedQuery.getResultList().stream().
-                    filter(user -> user.getRole().equals("user")).collect(Collectors.toList());
-
-        } catch (PersistenceException | IllegalStateException e) {
-            entityManager.getTransaction().rollback();
-            log.error("UserDAOImpl.getListUsers", e);
-            throw new CatchingCauseException(e);
+    public User getByEmail(String email) {
+        User user = null;
+        TypedQuery<User> typedQuery = entityManager.createNamedQuery("getByUserEmail", User.class).
+                setParameter("email", email);
+        List<User> resultList = typedQuery.getResultList();
+        if (resultList.size() != 0) {
+            for (User user1 : resultList) {
+                user = user1;
+            }
         }
+        log.trace("UserDAOImpl.getByEmail(String email) email = " + email + " in user = " + user);
+        return user;
+    }
+
+    @Override
+    public List<User> getListUsers() {
+        List<User> users;
+        TypedQuery<User> typedQuery = entityManager.createNamedQuery("getAllUser", User.class);
+        users = typedQuery.getResultList().stream().
+                filter(user -> user.getRole().equals("user")).collect(Collectors.toList());
+        log.trace("UserDAOImpl.getListUsers()");
         return users;
     }
 
     @Override
-    public User getRoleData(String idAdmin) throws CatchingCauseException {
-        User user;
-        try {
-            TypedQuery<User> typedQuery = entityManager.createNamedQuery("getAdmin", User.class).
-                    setParameter("role", idAdmin);
-            user = typedQuery.getSingleResult();
-        } catch (PersistenceException e) {
-            System.out.println("error " + Arrays.toString(e.getStackTrace()));
-            log.error("UserDAOImpl.getRoleData", e);
-            throw new CatchingCauseException(e);
-        }
-        return user;
+    public Set<User> getListUsersWhereIdTopic(long id) {
+        TypedQuery<Topic> typedQuery = entityManager.createNamedQuery("getAllUserWhereIdTopic", Topic.class).
+                setParameter("id", id);
+        Topic topic = typedQuery.getSingleResult();
+        log.trace("UserDAOImpl.getListUsersWhereIdTopic(long id) id = " + id);
+        return topic.getUsers();
     }
 
     @Override
@@ -81,7 +113,25 @@ public class UserDAOImpl extends BaseDAO<User,Long> implements UserDAO {
                 role = "user";
             }
         }
+        log.trace("UserDAOImpl.getRole(User user) role = " + role + " in user =" + user);
         return role;
+    }
+
+    private void validationSQL(User user) throws LoginException {
+        if (getByName(user.getUserName()) != null) {
+            log.error("UserDAOImpl.validationSQL(User user)",
+                    new Throwable("user.getUserName() != null = " + user));
+            throw new LoginException("name exist");
+        } else {
+            log.trace("UserDAOImpl.save(User user) = true");
+        }
+        if (getByEmail(user.getEmail()) != null) {
+            log.error("UserDAOImpl.validationSQL(User user)",
+                    new Throwable("user.getEmail() != null = " + user));
+            throw new LoginException("email exist");
+        } else {
+            log.trace("UserDAOImpl.save(User user) = true");
+        }
     }
 
 }

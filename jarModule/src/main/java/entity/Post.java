@@ -12,7 +12,8 @@ import java.io.Serializable;
 @Table(name = "post")
 @NamedQueries({
         @NamedQuery(name = "getAllPost",
-                query = "SELECT t FROM Post t where t.topic.id = : idTopic and t.user.id = : idUser")
+                query = "SELECT t FROM Post t where t.topic.id = : idTopic and t.user.id = : idUser"),
+        @NamedQuery(name = "getByPostName", query = "select p from Post p where p.name = :name")
 })
 public class Post implements Serializable {
     @Id
@@ -23,10 +24,10 @@ public class Post implements Serializable {
     @Lob
     @Column(name = "text")
     private String text;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "topic_id")
     private Topic topic;
 
