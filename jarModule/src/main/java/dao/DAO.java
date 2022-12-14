@@ -3,7 +3,7 @@ package dao;
 import exception.MyException;
 
 public interface DAO<T,K> {
-    void save(T t) throws MyException;
+    T save(T t) throws MyException;
 
     T get(K k);
 

@@ -1,4 +1,5 @@
-package configurations;
+package org.web.configurations;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,7 @@ import java.util.Properties;
 @PropertySource("classpath:properties-config.properties")
 @ComponentScan(basePackages = { "dao"})
 @EnableTransactionManagement
-public class AppConfig {
+public class AppContext {
 
     @Autowired
     private Environment environment;

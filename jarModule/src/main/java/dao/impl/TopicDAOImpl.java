@@ -25,10 +25,10 @@ public class TopicDAOImpl extends BaseDAO<Topic, Long> implements TopicDAO {
     }
 
     @Override
-    public void save(Topic topic) throws MyException {
+    public Topic save(Topic topic) throws MyException {
         log.trace("TopicDAOImpl.save(Topic topic) " + topic);
         validationSQLSave(topic.getNameTopic());
-        super.save(topic);
+        return super.save(topic);
     }
 
     @Override

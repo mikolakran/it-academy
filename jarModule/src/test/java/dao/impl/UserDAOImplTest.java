@@ -2,7 +2,6 @@ package dao.impl;
 
 import configurations.AppConfig;
 import dao.UserDAO;
-import entity.Topic;
 import entity.User;
 import exception.MyException;
 import org.junit.Before;
@@ -13,15 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
-
 public class UserDAOImplTest {
 
     @Autowired
@@ -86,7 +82,7 @@ public class UserDAOImplTest {
     @Test
 //    @Ignore
     public void get() {
-        User result1 = userDAO.getByName("Nikolai4");
+        User result1 = userDAO.getByName(NAME);
         assertEquals(result1.toString(), userDAO.get(result1.getId()).toString());
     }
 

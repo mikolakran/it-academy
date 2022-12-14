@@ -10,7 +10,7 @@ import exception.MyException;
 import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import validation.CheckSQL;
+import validation.Validation;
 
 import java.util.List;
 import java.util.Set;
@@ -26,12 +26,12 @@ public class UserDAOImpl extends BaseDAO<User, Long> implements UserDAO {
     }
 
     @Override
-    public void save(User user) throws MyException {
+    public User save(User user) throws MyException {
         log.trace("UserDAOImpl.save(User user) " + user);
-        new CheckSQL.Builder().validationName(user.getUserName()).validationEmail(user.getEmail()).
+        new Validation.Builder().validationName(user.getUserName()).validationEmail(user.getEmail()).
                 validationPassword(user.getPassword()).build();
         validationSQL(user);
-        super.save(user);
+        return super.save(user);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserDAOImpl extends BaseDAO<User, Long> implements UserDAO {
 
     @Override
     public void update(User user) throws MyException {
-        new CheckSQL.Builder().validationName(user.getUserName()).validationEmail(user.getEmail()).
+        new Validation.Builder().validationName(user.getUserName()).validationEmail(user.getEmail()).
                 validationPassword(user.getPassword()).isUpdateUserPossibly(user, getListUsers()).build();
         log.trace("UserDAOImpl.update(User user) user = " + user);
         super.update(user);

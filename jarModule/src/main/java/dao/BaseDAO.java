@@ -22,8 +22,9 @@ public class BaseDAO<T, K> implements DAO<T, K> {
 
     @Transactional
     @Override
-    public void save(T t) throws MyException {
-        entityManager.persist(t);
+    public T save(T t) throws MyException {
+          entityManager.persist(t);
+       return t;
     }
 
     @Override

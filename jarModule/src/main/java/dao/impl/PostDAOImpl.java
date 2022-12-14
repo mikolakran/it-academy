@@ -21,9 +21,9 @@ public class PostDAOImpl extends BaseDAO<Post, Long> implements PostDAO {
     }
 
     @Override
-    public void save(Post post) throws MyException {
+    public Post save(Post post) throws MyException {
         log.trace("PostDAOImpl.save(Post post) post = " + post);
-        super.save(post);
+        return super.save(post);
     }
 
     @Override
