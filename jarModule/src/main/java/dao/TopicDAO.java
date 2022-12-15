@@ -1,14 +1,23 @@
 package dao;
 
 import entity.Topic;
-import exception.CatchingCauseException;
+import entity.User;
 
 import java.util.Set;
 
-public interface TopicDAO extends DAO<Topic> {
+public interface TopicDAO extends DAO<Topic, Long> {
 
-    Set<Topic> getListTopic(long id) throws CatchingCauseException;
+    @Deprecated
+    @Override
+    void delete(Long aLong);//delete topic and user_topic
 
-    void deleteTopic(long idUser, long idTopic) throws CatchingCauseException;
+    @Deprecated
+    Topic getByName(String name);// using for TopicDAOImpl.class and test
+
+    Set<Topic> getListTopic(long id);
+
+    Set<User> getListUser(long id);
+
+    void deleteUserAndPost(long idUser, long idTopic);
 
 }

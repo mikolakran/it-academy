@@ -1,14 +1,13 @@
 package dao;
 
-import exception.CatchingCauseException;
-import exception.LoginException;
+import exception.MyException;
 
-public interface DAO<T> {
-    void save(T t) throws LoginException, CatchingCauseException;
+public interface DAO<T,K> {
+    T save(T t) throws MyException;
 
-    T get(long id) throws CatchingCauseException;
+    T get(K k);
 
-    void update(T t) throws LoginException, CatchingCauseException;
+    void update(T t) throws MyException;
 
-    void delete(long id) throws CatchingCauseException;
+    void delete(K k);
 }
