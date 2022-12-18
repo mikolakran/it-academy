@@ -1,9 +1,9 @@
 package org.web.configurations;
 
+
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import org.springframework.web.filter.DelegatingFilterProxy;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -23,17 +23,13 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
         return new String[]{"/"};
     }
 
-    /*@Override
+    @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
-        registerFilters(servletContext);
-    }*/
+        DelegatingFilterProxy welcomeFilter = new DelegatingFilterProxy();
+        welcomeFilter.setTargetBeanName("welcomesFilter");
 
-    private void registerFilters(ServletContext servletContext) {
-        DelegatingFilterProxy usersFilter = new DelegatingFilterProxy();
-        usersFilter.setTargetBeanName("usersFilter");
-        servletContext.addFilter("usersFilter", usersFilter.getClass()).
-                addMappingForUrlPatterns(null,false,"/user/list");
+        servletContext.addFilter("welcomesFilter", welcomeFilter.getClass()).
+                addMappingForUrlPatterns(null,false,"/welcome");
     }
-
 }

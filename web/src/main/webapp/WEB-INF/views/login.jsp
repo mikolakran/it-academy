@@ -2,13 +2,14 @@
            prefix="c" %>
 <%@ taglib prefix="fmt"
            uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Home Input</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="reg.css">
+    <link rel="stylesheet" href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/> " />
+    <link rel="stylesheet" href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> " />
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reg.css'/>" />
 </head>
 <body>
 <header>
@@ -37,25 +38,27 @@
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
             <c:if test="${registration != null or error != null}">
-                <h3 style="color: red">Sorry user or password not true</h3>
+                <h3 style="color: red">${error}</h3>
             </c:if>
-            <form method="post" class="form-horizontal" action="home">
+            <form:form method="post" class="form-horizontal" action="login" modelAttribute="userForm">
                 <small>
                     <span class="heading ">Input</span>
                 </small>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="userName"  placeholder="Login">
+                    <form:input type="text" class="form-control" name="userName"  placeholder="Login" path="userName"/>
                     <i class="fa fa-user"></i>
                 </div>
                 <div class="form-group help">
-                    <input type="password" class="form-control" name="password"  placeholder="Password">
+                    <form:input type="password" class="form-control" name="password"  placeholder="Password" path="password"/>
                     <i class="fa fa-lock"></i>
                     <a href="#" class="fa fa-question-circle"></a>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default">ВХОД</button>
+                    <form:button type="submit" class="btn btn-default" >
+                        ВХОД
+                    </form:button>
                 </div>
-            </form>
+            </form:form>
         </div>
 
     </div>

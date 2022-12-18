@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-import org.web.interceptor.LoginInterceptor;
+import org.web.interceptor.logoutInterceptor;
 
 @Configuration
 @EnableWebMvc
@@ -32,10 +32,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         WebMvcConfigurer.super.addResourceHandlers(registry);
     }
 
-/*    @Override
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
+        registry.addInterceptor(new logoutInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login","/logout","/add");
-    }*/
+                .excludePathPatterns("/login","/logout","/addUser");
+    }
 }
