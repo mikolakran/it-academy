@@ -2,8 +2,6 @@ package org.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
-
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,12 +20,14 @@ public class WelcomeController {
     }
 
     @GetMapping("/welcome")
-    public ModelAndView welcome(@SessionAttribute() UserForm userSession,
+    public ModelAndView displayWelcome(@SessionAttribute() UserForm userSession,
                                 @SessionAttribute(value = "topics",required = false) Set<TopicForm> topics){
         ModelAndView modelAndView = new ModelAndView("welcome");
         modelAndView.addObject("userForm",userSession);
         if (topics!=null) {
             modelAndView.addObject("topics",topics);
+        }else {
+            modelAndView.addObject("topicNull","Topics null");
         }
         return modelAndView;
     }

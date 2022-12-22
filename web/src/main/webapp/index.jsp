@@ -16,7 +16,7 @@
     <div class="container-fluid" >
       <div class="col-md-8">
       <div class="navbar-header">
-        <a href="${pageContext.request.contextPath}/login" class="navbar-brand">It-Academy</a>
+
       </div>
         </div>
       <div>
@@ -30,5 +30,7 @@
     </div>
   </nav>
 </header>
+
 </body>
 </html>
+<%--<a href="${pageContext.request.contextPath}/login" class="navbar-brand">It-Academy</a>--%>

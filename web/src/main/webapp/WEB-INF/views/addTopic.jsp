@@ -6,16 +6,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>AddTopic</title>
-    <link rel="stylesheet" href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/> " />
-    <link rel="stylesheet" href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> " />
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reg.css'/>" />
+    <title>Add Topic</title>
+    <link rel="stylesheet"
+          href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/> "/>
+    <link rel="stylesheet"
+          href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> "/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reg.css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/resources/css/user.css'/>"/>
 </head>
 <body>
 <header>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <div class="col-md-10">
+            <div class="col-md-8">
                 <div class="navbar-header">
                     <a href="#" class="navbar-brand">It-Academy</a>
                 </div>
@@ -25,6 +28,22 @@
                     <li><a href="#">О нас</a></li>
                     <li><a href="#">Обратная связь</a></li>
                 </ul>
+            </div>
+            <div class="userinfo">
+                <div class="user">
+                    <ul>
+                        <li>
+                            <c:if test="${userForm.userName!=null}">
+                                <c:if test="${userForm.photo!=null}">
+                                    <img src="${pageContext.request.contextPath}/image" title="user-name"/>
+                                </c:if>
+                                <span>Hello ${userForm.userName}</span>
+                            </c:if>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div>
             </div>
         </div>
     </nav>
@@ -41,7 +60,8 @@
                         <span class="heading ">Add Topic</span>
                     </small>
                     <div class="form-group">
-                        <form:input type="text" class="form-control" name="addTopic" placeholder="Name Topic" path="nameTopic"/>
+                        <form:input type="text" class="form-control" name="addTopic" placeholder="Name Topic"
+                                    path="nameTopic"/>
                         <i class="fa fa-user"></i>
                     </div>
                     <div class="form-group">
@@ -66,16 +86,16 @@
                     <h3 class="text-center">${topicNull}</h3>
                 </c:if>
                 <c:if test="${topicNull==null}">
-                    <form action="addTopic" method="post">
-                        <select name="idUserTopic">
-                            <c:forEach var="topic" items="${topicList}">
+                    <form:form action="addTopic" method="post" modelAttribute="topicForm">
+                        <form:select name="idAddTopic" path="idAddTopic">
+                            <c:forEach var="topic" items="${topics}">
                                 <option value="<c:out value="${topic.id}"/>">
                                     <c:out value="${topic.nameTopic}"/>
                                 </option>
                             </c:forEach>
-                        </select>
-                        <button type="submit" class="btn btn-default" onclick="${pageContext.request.contextPath}/welcome'">add</button>
-                    </form>
+                        </form:select>
+                        <button type="submit" class="btn btn-default">add</button>
+                    </form:form>
                 </c:if>
                 <a href="${pageContext.request.contextPath}/welcome" class="btn btn-primary">welcome</a>
                 <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>

@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -57,13 +58,13 @@ public class TopicDAOImplTest {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void throwsExceptionForSave(){
         assertThrows(MyException.class,()->topicDAO.save(topic));
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void get(){
         Topic result = topicDAO.getByName(topic.getNameTopic());
         assertEquals(result.toString(),topicDAO.get(result.getId()).toString());
@@ -113,6 +114,14 @@ public class TopicDAOImplTest {
 
     @Test
     @Ignore
+    public void getAll(){
+        List<Topic> listTopic = topicDAO.getListTopic();
+        System.out.println("listTopic.size() = " + listTopic.size());
+        assertNotNull(listTopic);
+    }
+
+    @Test
+    @Ignore
     public void getListUserInTopic() {
         Topic topic2 = topicDAO.getByName(NAME);
         assertArrayEquals(topicDAO.getListUser(topic2.getId()).toArray(),
@@ -120,6 +129,7 @@ public class TopicDAOImplTest {
     }
 
     @Test
+    @Ignore
     public void getByName(){
         Topic topic1 = topicDAO.getByName(NAME);
         assertEquals(topic1.getNameTopic(),topicDAO.getByName(topic1.getNameTopic()).getNameTopic());

@@ -1,7 +1,5 @@
 package org.web.controller.user;
 
-import dao.UserDAO;
-import dao.impl.UserDAOImpl;
 import exception.MyException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,25 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.web.facades.TopicFacade;
 import org.web.facades.UserFacade;
-import org.web.forms.TopicForm;
 import org.web.forms.UserForm;
 import validation.Validation;
 
 import java.io.IOException;
-import java.util.Set;
 
-
-@SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
 @Controller
 @RequestMapping("/")
 public class UserController {
     @Autowired
     private UserFacade userFacade;
-
-    @Autowired
-    private TopicFacade topicFacade;
 
     @GetMapping("/login")
     public ModelAndView displayLogin() {
@@ -42,9 +32,15 @@ public class UserController {
                                  HttpServletResponse response) throws IOException {
         ModelAndView modelAndView = new ModelAndView("welcome");
         try {
-            userForm = userFacade.getByName(userForm.getUserName());
-            request.getSession().setAttribute("userSession", userForm);
-            response.sendRedirect(request.getContextPath() + "/welcome");
+            UserForm resultSQLUserForm = userFacade.getByName(userForm.getUserName());
+            if (resultSQLUserForm.getPassword().equals(userForm.getPassword())) {
+                request.getSession().setAttribute("userSession", resultSQLUserForm);
+                response.sendRedirect(request.getContextPath() + "/welcome");
+            }else {
+                modelAndView.setViewName("login");
+                modelAndView.addObject("userForm",new UserForm());
+                modelAndView.addObject("error","password not exist");
+            }
         } catch (MyException e) {
             modelAndView.setViewName("login");
             modelAndView.addObject("userForm", new UserForm());
@@ -63,13 +59,15 @@ public class UserController {
     public ModelAndView addUser(HttpServletRequest request, HttpServletResponse response,
                                 @ModelAttribute("userForm") UserForm userForm) throws IOException {
         ModelAndView modelAndView = new ModelAndView("welcome");
+        if (userForm.getMultipartFile() != null) {
+            userForm.setPhoto(userForm.getMultipartFile().getBytes());
+        }
         try {
             new Validation.Builder().
                     validationPassSamePass2(userForm.getPassword(), userForm.getConfirmPassword()).build();
             userFacade.getRole(userForm);
             UserForm save = userFacade.save(userForm);
             request.getSession().setAttribute("userSession", save);
-            modelAndView.addObject("userForm", save);
             response.sendRedirect(request.getContextPath() + "/welcome");
         } catch (MyException e) {
             modelAndView.setViewName("addUser");
@@ -81,14 +79,14 @@ public class UserController {
 
     @GetMapping("/upDateUser")
     public ModelAndView displayUpDate(@SessionAttribute() UserForm userSession,
-                                      @RequestParam(value = "idKey", required = false ,defaultValue = "0") Long idKey,
+                                      @RequestParam(value = "idKey", required = false, defaultValue = "0") Long idKey,
                                       HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("upDateUser");
         if (idKey != 0) {
             UserForm userForm = userFacade.get(idKey);
             request.getSession().setAttribute("userAndAdmin", userForm);
             modelAndView.addObject("userForm", userForm);
-            modelAndView.addObject("role",userSession.getRole());
+            modelAndView.addObject("role", userSession.getRole());
         } else {
             modelAndView.addObject("userForm", userSession);
         }
@@ -130,26 +128,31 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ModelAndView getUsersList(@RequestParam(value = "idKey", required = false) Long idKey) {
+    public ModelAndView getUsersList(@SessionAttribute(required = false) UserForm userSession,
+                                     @RequestParam(value = "idKey", required = false) Long idKey) {
         ModelAndView modelAndView = new ModelAndView("users");
-        UserDAO userDAO = new UserDAOImpl();
         if (idKey != null) {
             userFacade.delete(idKey);
         }
         if (userFacade.getListUsers().size() == 0) {
             modelAndView.addObject("userListNull", "Sorry your not lucky");
         }
+        modelAndView.addObject("userForm",userSession);
         modelAndView.addObject("userList", userFacade.getListUsers());
         return modelAndView;
     }
 
-    @GetMapping("/logout")
-    public void setLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.getSession().invalidate();
-        response.sendRedirect(request.getContextPath() + "/login");
+    @GetMapping("/image")
+    public void addImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        UserForm userForm = (UserForm) request.getSession().getAttribute("userSession");
+        if (userForm.getPhoto() != null) {
+            response.setContentType("image/jpg");
+            response.getOutputStream().write(userForm.getPhoto());
+        }
+        response.getOutputStream().close();
     }
 
-    private void updateDataByUser(UserForm userForm, UserForm resultUserSQL) throws MyException {
+    private void updateDataByUser(UserForm userForm, UserForm resultUserSQL) throws MyException, IOException {
         if (resultUserSQL != null) {
             if (!resultUserSQL.getUserName().equals(userForm.getUserName())) {
                 resultUserSQL.setUserName(userForm.getUserName());
@@ -168,6 +171,10 @@ public class UserController {
             }
             if (!resultUserSQL.getEmail().equals(userForm.getEmail())) {
                 resultUserSQL.setEmail(userForm.getEmail());
+                userFacade.update(resultUserSQL);
+            }
+            if (userForm.getMultipartFile() != null) {
+                resultUserSQL.setPhoto(userForm.getMultipartFile().getBytes());
                 userFacade.update(resultUserSQL);
             }
         }

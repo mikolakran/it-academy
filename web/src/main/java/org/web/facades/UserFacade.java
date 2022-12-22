@@ -6,10 +6,12 @@ import exception.LoginException;
 import exception.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.web.forms.TopicForm;
 import org.web.forms.UserForm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class UserFacade {
@@ -17,6 +19,8 @@ public class UserFacade {
     @Autowired
     private UserDAO userDAO;
 
+    @Autowired
+    private TopicFacade topicFacade;
 
     public UserForm save(UserForm userForm) throws MyException {
         User user = new User();
@@ -41,8 +45,11 @@ public class UserFacade {
 
     public void delete(Long idKey) {
         User user = new User();
-        UserForm userForm = new UserForm();
-        userForm.setId(idKey);
+        UserForm userForm = get(idKey);
+        Set<TopicForm> listTopic = topicFacade.getListTopic(userForm.getId());
+        if (listTopic.size()!=0) {
+            listTopic.forEach(topicForm -> topicFacade.deleteUserAndPost(userForm.getId(), topicForm.getId()));
+        }
         buildUser(user, userForm);
         userDAO.delete(user.getId());
     }
@@ -65,11 +72,10 @@ public class UserFacade {
         return userFormList;
     }
 
-    public String getRole(UserForm userForm) {
+    public void getRole(UserForm userForm) {
         User user = new User();
         buildUser(user, userForm);
         userForm.setRole(userDAO.getRole(user));
-        return userForm.getRole();
     }
 
     private void buildUser(User user, UserForm userForm) {
@@ -78,5 +84,6 @@ public class UserFacade {
         user.setPassword(userForm.getPassword());
         user.setEmail(userForm.getEmail());
         user.setRole(userForm.getRole());
+        user.setImage(userForm.getPhoto());
     }
 }

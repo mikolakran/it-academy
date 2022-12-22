@@ -1,8 +1,6 @@
 package org.web.forms;
 
-import entity.Post;
 import entity.Topic;
-import entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,12 +15,23 @@ public class TopicForm implements Serializable {
     private long id;
     private String nameTopic;
     private Set<UserForm> users;
-    private Set<Post> post;
-    private Set<TopicForm> topics;
+    private Long idAddTopic;
 
-    public TopicForm(Topic topic){
+    public TopicForm(Topic topic) {
         this.id = topic.getId();
         this.nameTopic = topic.getNameTopic();
     }
 
+    public TopicForm(long id, String nameTopic) {
+        this.id = id;
+        this.nameTopic = nameTopic;
+    }
+
+    @Override
+    public String toString() {
+        return "TopicForm{" +
+                "id=" + id +
+                ", nameTopic='" + nameTopic + '\'' +
+                '}';
+    }
 }

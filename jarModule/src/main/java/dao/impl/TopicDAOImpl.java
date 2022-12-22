@@ -63,6 +63,13 @@ public class TopicDAOImpl extends BaseDAO<Topic, Long> implements TopicDAO {
     }
 
     @Override
+    public List<Topic> getListTopic() {
+        log.trace("TopicDAOImpl.getListTopic()");
+        TypedQuery<Topic> typedQuery = entityManager.createNamedQuery("getAll", Topic.class);
+        return typedQuery.getResultList();
+    }
+
+    @Override
     public Set<Topic> getListTopic(long id) {
         log.trace("TopicDAOImpl.getListTopic(long idUser)");
         TypedQuery<User> typedQuery = entityManager.createNamedQuery("getAllTopic", User.class).
@@ -73,7 +80,7 @@ public class TopicDAOImpl extends BaseDAO<Topic, Long> implements TopicDAO {
 
     @Override
     public Set<User> getListUser(long id) {
-        log.trace("TopicDAOImpl.getListTopic(long idUser)");
+        log.trace("TopicDAOImpl.getListTopic(long idTopic)");
         TypedQuery<Topic> typedQuery = entityManager.createNamedQuery("getAllTopicUsers", Topic.class).
                 setParameter("id", id);
         Topic topic = typedQuery.getSingleResult();

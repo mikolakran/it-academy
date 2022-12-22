@@ -6,12 +6,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>UpDate</title>
+    <title>UpDate User</title>
     <link rel="stylesheet"
           href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/> "/>
     <link rel="stylesheet"
           href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> "/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reg.css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/resources/css/user.css'/>"/>
 </head>
 <body>
 <header>
@@ -19,16 +20,30 @@
         <div class="container-fluid">
             <div class="col-md-8">
                 <div class="navbar-header">
-                    <a href="${pageContext.request.contextPath}/login" class="navbar-brand">It-Academy</a>
+                    <a href="#" class="navbar-brand">It-Academy</a>
                 </div>
             </div>
             <div>
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Главная</a></li>
                     <li><a href="#">О нас</a></li>
                     <li><a href="#">Обратная связь</a></li>
-                    <li><a href="#">Registration</a></li>
                 </ul>
+            </div>
+            <div class="userinfo">
+                <div class="user">
+                    <ul>
+                        <li>
+                            <c:if test="${userForm.userName!=null}">
+                                <c:if test="${userForm.photo!=null}">
+                                    <img src="${pageContext.request.contextPath}/image" title="user-name"/>
+                                </c:if>
+                                <span>Hello ${userForm.userName}</span>
+                            </c:if>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div>
             </div>
         </div>
     </nav>
@@ -40,7 +55,7 @@
                 <h4 style=" color: red">${error}</h4>
             </c:if>
             <form:form method="post" class="form-horizontal" action="upDateUser" id="userForm"
-                       modelAttribute="userForm">
+                       modelAttribute="userForm" enctype="multipart/form-data">
                 <small>
                     <span class="heading ">UpDate</span>
                 </small>
@@ -54,7 +69,7 @@
                     <i class="fa fa-lock"></i>
                 </div>
                 <div class="form-group help">
-                    <form:input type="password" class="form-control" name="password" placeholder="New Password"
+                    <form:input type="password" class="form-control" name="newPassword" placeholder="New Password"
                                 path="newPassword"/>
                     <i class="fa fa-lock"></i>
                 </div>
@@ -63,7 +78,11 @@
                     <i class="fa fa-user"></i>
                 </div>
                 <div class="form-group">
-                    <form:button type="submit" class="btn btn-default" >
+                    <p>Upload photo</p>
+                    <form:input type="file" name="multipartFile" path="multipartFile"/>
+                </div>
+                <div class="form-group">
+                    <form:button type="submit" class="btn btn-default">
                         Далее
                     </form:button>
                 </div>

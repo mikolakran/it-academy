@@ -7,14 +7,14 @@ import lombok.SneakyThrows;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
 
-public class logoutInterceptor extends WebContentInterceptor {
+public class LogoutInterceptor extends WebContentInterceptor {
 
     @SneakyThrows
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         HttpSession session = request.getSession(false);
-        if (session.getAttribute("userSession")==null) {
-            response.sendRedirect(request.getContextPath()+"/login");
+        if (session.getAttribute("userSession") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
         }
         return true;
     }

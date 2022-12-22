@@ -1,6 +1,5 @@
 package org.web.controller.topic;
 
-import entity.User;
 import exception.MyException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,33 +29,68 @@ public class TopicController {
     private UserFacade userFacade;
 
     @GetMapping("/addTopic")
-    public ModelAndView displayAddTopic(@SessionAttribute UserForm userSession){
+    public ModelAndView displayAddTopic(@SessionAttribute UserForm userSession) {
         ModelAndView modelAndView = new ModelAndView("addTopic");
         TopicForm topicForm = new TopicForm();
-        modelAndView.addObject(topicForm);
-        modelAndView.addObject("userForm",userSession);
+        if (userSession.getRole().equals("admin")) {
+            modelAndView.addObject(topicForm);
+            modelAndView.addObject("userForm", userSession);
+        } else {
+            Set<TopicForm> listAllTopic = topicFacade.getAll();
+            Set<TopicForm> listUserTopic = topicFacade.getListTopic(userSession.getId());
+            Set<TopicForm> topics = new HashSet<>();
+            if (listAllTopic.size() != 0) {
+                listAllTopic.forEach(topic -> {
+                    if (!listUserTopic.contains(topic)) {
+                        topics.add(topic);
+                    }
+                });
+                modelAndView.addObject("userForm", userSession);
+                modelAndView.addObject("topicForm", topicForm);
+                modelAndView.addObject("topics", topics);
+            } else {
+                modelAndView.addObject("topicNull", "Topics null");
+            }
+        }
         return modelAndView;
     }
 
     @PostMapping("/addTopic")
     public ModelAndView addTopic(HttpServletRequest request, HttpServletResponse response,
                                  @ModelAttribute TopicForm topicForm,
-                                 @SessionAttribute(required = false)UserForm userSession) throws IOException {
+                                 @SessionAttribute(required = false) UserForm userSession) throws IOException {
         ModelAndView modelAndView = new ModelAndView("welcome");
         UserForm resultUserSQL = userFacade.get(userSession.getId());
         topicForm.setNameTopic(topicForm.getNameTopic());
-        Set<UserForm> users = new HashSet<>();
-        users.add(resultUserSQL);
-        topicForm.setUsers(users);
-        try {
-            topicFacade.save(topicForm);
-            Set<TopicForm> listTopic = topicFacade.getListTopic(userSession.getId());
-            request.getSession().setAttribute("topics",listTopic);
-            response.sendRedirect(request.getContextPath() + "/welcome");
-        } catch (MyException e) {
-            modelAndView.setViewName("addTopic");
-            modelAndView.addObject("topicForm", new TopicForm());
-            modelAndView.addObject("error", e.getMessage());
+
+        if (resultUserSQL.getRole().equals("admin")) {
+            try {
+                Set<UserForm> users = new HashSet<>();
+                users.add(resultUserSQL);
+                topicForm.setUsers(users);
+                topicFacade.save(topicForm);
+                response.sendRedirect(request.getContextPath() + "/welcome");
+            } catch (MyException e) {
+                modelAndView.setViewName("addTopic");
+                modelAndView.addObject("topicForm", new TopicForm());
+                modelAndView.addObject("userForm", userSession);
+                modelAndView.addObject("error", e.getMessage());
+            }
+        } else {
+            try {
+                UserForm resulSQLUserForm = userFacade.get(userSession.getId());
+                TopicForm resulTopicForm = topicFacade.get(topicForm.getIdAddTopic());
+                Set<UserForm> listUser = topicFacade.getListUser(resulTopicForm.getId());
+                listUser.add(resulSQLUserForm);
+                resulTopicForm.setUsers(listUser);
+                topicFacade.update(resulTopicForm);
+                response.sendRedirect(request.getContextPath() + "/welcome");
+            } catch (MyException e) {
+                modelAndView.setViewName("addTopic");
+                modelAndView.addObject("userForm", userSession);
+                modelAndView.addObject("topicForm", new TopicForm());
+                modelAndView.addObject("error", e.getMessage());
+            }
         }
         return modelAndView;
     }

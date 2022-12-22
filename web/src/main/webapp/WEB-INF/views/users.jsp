@@ -9,14 +9,15 @@
     <link rel="stylesheet" href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/> " />
     <link rel="stylesheet" href="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> " />
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reg.css'/>" />
+    <link rel="stylesheet" href="<c:url value='/resources/css/user.css'/>" />
 </head>
-<br>
+<body>
 <header>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <div class="col-md-10">
+            <div class="col-md-8">
                 <div class="navbar-header">
-                    <a href="${pageContext.request.contextPath}/login" class="navbar-brand">It-Academy</a>
+                    <a href="#" class="navbar-brand">It-Academy</a>
                 </div>
             </div>
             <div>
@@ -24,6 +25,22 @@
                     <li><a href="#">О нас</a></li>
                     <li><a href="#">Обратная связь</a></li>
                 </ul>
+            </div>
+            <div class="userinfo">
+                <div class="user">
+                    <ul>
+                        <li>
+                            <c:if test="${userForm.userName!=null}">
+                                <c:if test="${userForm.photo!=null}">
+                                    <img src="${pageContext.request.contextPath}/image" title="user-name"/>
+                                </c:if>
+                                <span>Hello ${userForm.userName}</span>
+                            </c:if>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div>
             </div>
         </div>
     </nav>
@@ -56,14 +73,7 @@
             </c:forEach>
     </div>
 </div>
-</br>
 <div class="container-fluid">
-    <c:if test="${userNul==null}">
-        <div class="col-md-3"></div>
-    </c:if>
-    <c:if test="${userNull!=null}">
-        <div class="col-md-3"></div>
-    </c:if>
     <div class="col-md-2">
         <a href="${pageContext.request.contextPath}/welcome" class="btn btn-primary">welcome</a>
         <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary" >logout</a>
