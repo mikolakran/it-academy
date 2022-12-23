@@ -24,6 +24,8 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {AppConfig.class})
 public class PostDAOImplTest {
 
+
+
     @Autowired
     private PostDAO postDAO;
     @Autowired
