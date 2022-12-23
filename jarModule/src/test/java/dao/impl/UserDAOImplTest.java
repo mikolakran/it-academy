@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import repository.UserJpaRepository;
 
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class UserDAOImplTest {
     @Autowired
     private UserDAO userDAO;
 
+    @Autowired
+    private UserJpaRepository userJpaRepository;
+
     private User user;
     private final String NAME = "Nikolai3";
     private final String PASSWORD = "*s9C#nFSNx#A";
@@ -32,6 +36,12 @@ public class UserDAOImplTest {
     @Before
     public void setUp() {
         user = new User(NAME, PASSWORD, EMAIL, ROLE);
+    }
+
+    @Test
+    @Ignore
+    public void springTest(){
+        userJpaRepository.findByEmail("mikolakran@gmail.com");
     }
 
     @Test
