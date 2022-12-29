@@ -34,12 +34,15 @@ public class UserController {
         try {
             UserForm resultSQLUserForm = userFacade.getByName(userForm.getUserName());
             if (resultSQLUserForm.getPassword().equals(userForm.getPassword())) {
+                if (resultSQLUserForm.getPhoto().length == 0) {
+                    resultSQLUserForm.setPhoto(null);
+                }
                 request.getSession().setAttribute("userSession", resultSQLUserForm);
                 response.sendRedirect(request.getContextPath() + "/welcome");
-            }else {
+            } else {
                 modelAndView.setViewName("login");
-                modelAndView.addObject("userForm",new UserForm());
-                modelAndView.addObject("error","password not exist");
+                modelAndView.addObject("userForm", new UserForm());
+                modelAndView.addObject("error", "password not exist");
             }
         } catch (MyException e) {
             modelAndView.setViewName("login");
@@ -67,6 +70,9 @@ public class UserController {
                     validationPassSamePass2(userForm.getPassword(), userForm.getConfirmPassword()).build();
             userFacade.getRole(userForm);
             UserForm save = userFacade.save(userForm);
+            if (save.getPhoto().length == 0) {
+                save.setPhoto(null);
+            }
             request.getSession().setAttribute("userSession", save);
             response.sendRedirect(request.getContextPath() + "/welcome");
         } catch (MyException e) {
@@ -137,7 +143,7 @@ public class UserController {
         if (userFacade.getListUsers().size() == 0) {
             modelAndView.addObject("userListNull", "Sorry your not lucky");
         }
-        modelAndView.addObject("userForm",userSession);
+        modelAndView.addObject("userForm", userSession);
         modelAndView.addObject("userList", userFacade.getListUsers());
         return modelAndView;
     }
@@ -145,7 +151,7 @@ public class UserController {
     @GetMapping("/image")
     public void addImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         UserForm userForm = (UserForm) request.getSession().getAttribute("userSession");
-        if (userForm.getPhoto() != null) {
+        if (userForm.getPhoto().length != 0) {
             response.setContentType("image/jpg");
             response.getOutputStream().write(userForm.getPhoto());
         }
@@ -173,9 +179,13 @@ public class UserController {
                 resultUserSQL.setEmail(userForm.getEmail());
                 userFacade.update(resultUserSQL);
             }
-            if (userForm.getMultipartFile() != null) {
+            if (userForm.getMultipartFile().getBytes().length != 0) {
                 resultUserSQL.setPhoto(userForm.getMultipartFile().getBytes());
                 userFacade.update(resultUserSQL);
+            } else {
+                if (resultUserSQL.getPhoto().length==0) {
+                    resultUserSQL.setPhoto(null);
+                }
             }
         }
     }

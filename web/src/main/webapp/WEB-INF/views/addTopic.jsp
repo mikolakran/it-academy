@@ -37,6 +37,9 @@
                                 <c:if test="${userForm.photo!=null}">
                                     <img src="${pageContext.request.contextPath}/image" title="user-name"/>
                                 </c:if>
+                                <c:if test="${userForm.photo==null}">
+                                    <img src="<c:url value='/resources/image/smail.jfif'/>" title="user-name"/>
+                                </c:if>
                                 <span>Hello ${userForm.userName}</span>
                             </c:if>
                         </li>
