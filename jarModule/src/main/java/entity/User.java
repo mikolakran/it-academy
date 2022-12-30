@@ -30,6 +30,9 @@ public class User implements Serializable {
     private String email;
     @Column(name = "role", nullable = false, length = 55)
     private String role;
+    @Lob
+    @Column(name = "image",length = Integer.MAX_VALUE)
+    private byte[] image;
 
     @ManyToMany(mappedBy = "users")
     private Set<Topic> topic;
@@ -50,6 +53,15 @@ public class User implements Serializable {
         this.password = password;
         this.email = email;
         this.role = role;
+    }
+
+    public User(long id, String userName, String password, String email, String role, byte[] image) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.image = image;
     }
 
     @Override

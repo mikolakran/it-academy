@@ -14,6 +14,7 @@ import java.util.Set;
 @Table(name = "topic")
 @NamedQueries({
         @NamedQuery(name = "getByTopicName", query = "select t from Topic t where t.nameTopic = :name"),
+        @NamedQuery(name = "getAll", query = "SELECT t FROM Topic t"),
         @NamedQuery(name = "getAllTopic", query = "SELECT u FROM User u LEFT JOIN FETCH u.topic  where u.id = : id"),
         @NamedQuery(name = "getAllTopicUsers", query = "SELECT t FROM Topic t LEFT JOIN FETCH t.users  where t.id = : id")
 })

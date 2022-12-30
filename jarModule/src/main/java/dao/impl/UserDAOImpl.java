@@ -117,7 +117,7 @@ public class UserDAOImpl extends BaseDAO<User, Long> implements UserDAO {
         return role;
     }
 
-    private void validationSQL(User user) throws LoginException {
+    private void validationSQL(User user) throws MyException {
         if (getByName(user.getUserName()) != null) {
             log.error("UserDAOImpl.validationSQL(User user)",
                     new Throwable("user.getUserName() != null = " + user));

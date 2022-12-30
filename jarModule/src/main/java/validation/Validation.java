@@ -4,7 +4,6 @@ import entity.User;
 import exception.LoginException;
 import lombok.extern.slf4j.Slf4j;
 
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,7 +76,7 @@ public class Validation {
                 }
                 if (listUser.getEmail().equals(user.getEmail()) &&
                         listUser.getId() != user.getId()) {
-                    log.error("UserDAOImpl.update(User user)" , new Throwable("E-mail exist = " + user.getEmail()));
+                    log.error("UserDAOImpl.update(User user)", new Throwable("E-mail exist = " + user.getEmail()));
                     throw new LoginException("email exist");
                 }
             }

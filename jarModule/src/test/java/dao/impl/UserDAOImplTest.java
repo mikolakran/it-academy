@@ -80,7 +80,7 @@ public class UserDAOImplTest {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void get() {
         User result1 = userDAO.getByName(NAME);
         assertEquals(result1.toString(), userDAO.get(result1.getId()).toString());
@@ -132,26 +132,26 @@ public class UserDAOImplTest {
 
 
     @Test
-//    @Ignore
+    @Ignore
     public void getByName() {
         assertEquals(user.getUserName(), userDAO.getByName(NAME).getUserName());
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void getByEmail(){
         assertEquals(user.getEmail(), userDAO.getByEmail(EMAIL).getEmail());
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void getListUsers() {
         List<User> listUsers = userDAO.getListUsers();
         assertArrayEquals(listUsers.toArray(), userDAO.getListUsers().toArray());
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void getRoleUser() {
         assertEquals(ROLE, userDAO.getRole(user));
     }

@@ -1,0 +1,36 @@
+
+.logo img{
+    display:inline-block;
+}
+.userinfo{
+    float: right;
+    width: 15%;
+    margin-top: 0.3em;
+}
+.user ul li{
+    display:inline-block;
+}
+.user ul li span{
+    vertical-align: middle;
+    margin-left: 0.8em;
+    font-size: 1em;
+}
+.user ul li{
+    color:#8C8C8C;
+    transition:0.5s all;
+    -webkit-transition:0.5s all;
+    -moz-transition:0.5s all;
+    -o-transition:0.5s all;
+}
+.user ul li:hover{
+    color:#B9CB41;
+}
+.user ul li img{
+    width: 30%;
+    border-radius:30em;
+    -webkit-border-radius:30em;
+    -moz-border-radius:30em;
+    -o-border-radius:30em;
+    vertical-align:middle;
+
+}
