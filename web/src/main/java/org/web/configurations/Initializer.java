@@ -1,11 +1,9 @@
 package org.web.configurations;
 
 
-import jakarta.servlet.MultipartConfigElement;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.*;
 import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import java.io.File;
@@ -16,12 +14,12 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{AppContext.class};
+        return new Class[]{SecurityConfiguration.class};
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{WebMvcConfig.class};
+        return new Class[]{AppContext.class};
     }
 
     @Override
@@ -42,6 +40,11 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
     }
 
     @Override
+    protected Filter[] getServletFilters() {
+        return new Filter[] { new HiddenHttpMethodFilter() };
+    }
+
+    @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
         DelegatingFilterProxy welcomeFilter = new DelegatingFilterProxy();
@@ -51,7 +54,7 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
                 addMappingForUrlPatterns(null, false, "/welcome");
 
         DelegatingFilterProxy postFilter = new DelegatingFilterProxy();
-        welcomeFilter.setTargetBeanName("postFilter");
+        postFilter.setTargetBeanName("postFilter");
 
         servletContext.addFilter("postFilter", postFilter.getClass()).
                 addMappingForUrlPatterns(null, false, "/posts");

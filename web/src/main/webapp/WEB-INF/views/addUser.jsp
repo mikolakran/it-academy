@@ -19,12 +19,12 @@
         <div class="container-fluid">
             <div class="col-md-8">
                 <div class="navbar-header">
-                    <a href="${pageContext.request.contextPath}/login" class="navbar-brand">It-Academy</a>
+                    <a href="${pageContext.request.contextPath}/" class="navbar-brand">It-Academy</a>
                 </div>
             </div>
             <div>
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="${pageContext.request.contextPath}/login">Главная</a></li>
+                    <li class="active"><a href="${pageContext.request.contextPath}/">Главная</a></li>
                     <li><a href="#">О нас</a></li>
                     <li><a href="#">Обратная связь</a></li>
                     <li><a href="#">Registration</a></li>
@@ -33,6 +33,7 @@
         </div>
     </nav>
 </header>
+<p class="personTable"></p>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
@@ -70,7 +71,6 @@
                 </div>
             </form:form>
         </div>
-
     </div>
 </div>
 </body>

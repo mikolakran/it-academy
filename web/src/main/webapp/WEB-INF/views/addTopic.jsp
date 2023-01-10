@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt"
            uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -55,7 +56,7 @@
     <c:if test="${error!=null}">
         <h4 style=" color: red">${error}</h4>
     </c:if>
-    <c:if test="${userForm.role == 'admin'}">
+    <security:authorize access="hasRole('ADMIN')">
         <div class="row">
             <div class="col-md-offset-3 col-md-6">
                 <form:form method="post" class="form-horizontal" action="addTopic" modelAttribute="topicForm">
@@ -78,8 +79,8 @@
                 <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
             </div>
         </div>
-    </c:if>
-    <c:if test="${userForm.role == 'user'}">
+    </security:authorize>
+    <security:authorize access="hasRole('USER')">
         <div class="row">
             <div class="col-md-offset-3 col-md-6">
                 <c:if test="${error!=null}">
@@ -104,7 +105,7 @@
                 <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">Logout</a>
             </div>
         </div>
-    </c:if>
+    </security:authorize>
 </div>
 </body>
 </html>

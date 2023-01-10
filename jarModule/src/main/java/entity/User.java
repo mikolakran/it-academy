@@ -11,20 +11,13 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
-@NamedQueries({
-        @NamedQuery(name = "getByUserName", query = "select u from User u where u.userName = :name"),
-        @NamedQuery(name = "getByUserEmail", query = "select u from User u where u.email = :email"),
-        @NamedQuery(name = "getAllUser", query = "select u from User u"),
-        @NamedQuery(name = "getAllUserWhereIdTopic", query = "SELECT t FROM Topic t LEFT JOIN FETCH t.users  where t.id = : id"),
-        @NamedQuery(name = "getAdmin", query = "SELECT u FROM User u where u.role = : role")
-})
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id; //
     @Column(name = "name", unique = true, nullable = false, length = 55)
     private String userName;
-    @Column(name = "password", nullable = false, length = 55)
+    @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "email", unique = true, nullable = false, length = 55)
     private String email;

@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt"
            uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -57,7 +58,7 @@
     <div class=" col-md-4">
         <div>
             <h1 id="h1r" class=" text-center">Welcome</h1>
-            <c:if test="${userForm.role == 'admin'}">
+            <security:authorize access="hasRole('ROLE_ADMIN')">
                 <c:if test="${topicNull!=null}">
                     <h3 class="text-center">${topicNull}</h3>
                 </c:if>
@@ -76,9 +77,8 @@
                 <a href="${pageContext.request.contextPath}/upDateUser" class="btn btn-primary">Update user</a>
                 <a href="${pageContext.request.contextPath}/users" class="btn btn-primary">Your users</a>
                 <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">logout</a>
-            </c:if>
-
-            <c:if test="${userForm.role == 'user'}">
+            </security:authorize>
+            <security:authorize access="hasRole('ROLE_USER')">
                 <c:if test="${topicNull!=null}">
                     <h3 class="text-center">${topicNull}</h3>
                 </c:if>
@@ -98,7 +98,7 @@
                 <a href="${pageContext.request.contextPath}/addTopic" class="btn btn-primary">Add Topic</a>
                 <a href="${pageContext.request.contextPath}/upDateUser" class="btn btn-primary">Update user</a>
                 <a href="${pageContext.request.contextPath}/logout" class="btn btn-primary">logout</a>
-            </c:if>
+            </security:authorize>
         </div>
     </div>
     <div class="col-md-2"></div>

@@ -2,7 +2,6 @@ package org.web.facades;
 
 import dao.UserDAO;
 import entity.User;
-import exception.LoginException;
 import exception.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,15 +53,12 @@ public class UserFacade {
         userDAO.delete(user.getId());
     }
 
-    public UserForm getByName(String name) throws MyException {
+    public UserForm getByName(String name) {
         User user = new User();
         UserForm userForm = new UserForm();
         userForm.setUserName(name);
         buildUser(user, userForm);
         User resultByName = userDAO.getByName(user.getUserName());
-        if (resultByName == null) {
-            throw new LoginException("Name or password not true");
-        }
         return new UserForm(resultByName);
     }
 
