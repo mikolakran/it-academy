@@ -1,55 +1,50 @@
 package dao.impl;
 
-import dao.BaseDAO;
 import dao.PostDAO;
 import entity.Post;
 import exception.MyException;
-import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import repository.PostJpaRepository;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Repository
 @Slf4j
-public class PostDAOImpl extends BaseDAO<Post, Long> implements PostDAO {
+public class PostDAOImpl implements PostDAO {
 
-    public PostDAOImpl() {
-        super();
-        aClass = Post.class;
-    }
+    @Autowired
+    private PostJpaRepository postJpaRepository;
 
     @Override
     public Post save(Post post) throws MyException {
         log.trace("PostDAOImpl.save(Post post) post = " + post);
-        return super.save(post);
+        return postJpaRepository.save(post);
     }
 
     @Override
     public Post get(Long id) {
         log.trace("PostDAOImpl.get(Long id) id = " + id);
-        return entityManager.find(Post.class, id);
+        return postJpaRepository.findById(id).orElse(null);
     }
 
     @Override
     public void update(Post post) {
         log.trace("PostDAOImpl.update(Post post) post = " + post);
-        entityManager.merge(post);
+        postJpaRepository.save(post);
     }
 
     @Override
     public void delete(Long id) {
         log.trace("PostDAOImpl.delete(Long id) id = " + id);
-        entityManager.remove(entityManager.find(Post.class, id));
+        postJpaRepository.delete(get(id));
     }
 
     @Override
     public Set<Post> getListByIdUserPost(long idTopic, long idUser) {
         log.trace("PostDAOImpl.getListByIdUserPost(long idTopic, long idUser) idTopic = " + idTopic + " idUser = " + idUser);
-        TypedQuery<Post> typedQuery = entityManager.createNamedQuery("getAllPost", Post.class).
-                setParameter("idTopic", idTopic).setParameter("idUser", idUser);
-        return new HashSet<>(typedQuery.getResultList());
+        return postJpaRepository.getListByIdUserPost(idTopic,idUser);
     }
 
 }

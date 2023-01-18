@@ -9,9 +9,11 @@ import java.io.IOException;
 
 @Controller
 public class LogoutController {
+
     @GetMapping("/logout")
     public void setLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.getSession().invalidate();
-        response.sendRedirect(request.getContextPath() + "/login");
+        response.sendRedirect(request.getContextPath() + "/");
     }
+
 }

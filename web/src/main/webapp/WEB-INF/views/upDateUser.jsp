@@ -33,14 +33,27 @@
                 <div class="user">
                     <ul>
                         <li>
-                            <c:if test="${userForm.userName!=null}">
-                                <c:if test="${userForm.photo!=null}">
-                                    <img src="${pageContext.request.contextPath}/image" title="user-name"/>
+                            <c:if test="${userAndAdmin!=null}">
+                                <c:if test="${userAndAdmin.userName!=null}">
+                                    <c:if test="${userAndAdmin.photo!=null}">
+                                        <img src="${pageContext.request.contextPath}/image" title="user-name"/>
+                                    </c:if>
+                                    <c:if test="${userAndAdmin.photo==null}">
+                                        <img src="<c:url value='/resources/image/smail.jfif'/>" title="user-name"/>
+                                    </c:if>
+                                    <span>Hello ${userAndAdmin.userName}</span>
                                 </c:if>
-                                <c:if test="${userForm.photo==null}">
-                                    <img src="<c:url value='/resources/image/smail.jfif'/>" title="user-name"/>
+                            </c:if>
+                            <c:if test="${userAndAdmin==null}">
+                                <c:if test="${userForm.userName!=null}">
+                                    <c:if test="${userForm.photo!=null}">
+                                        <img src="${pageContext.request.contextPath}/image" title="user-name"/>
+                                    </c:if>
+                                    <c:if test="${userForm.photo==null}">
+                                        <img src="<c:url value='/resources/image/smail.jfif'/>" title="user-name"/>
+                                    </c:if>
+                                    <span>Hello ${userForm.userName}</span>
                                 </c:if>
-                                <span>Hello ${userForm.userName}</span>
                             </c:if>
                         </li>
                     </ul>
@@ -65,11 +78,6 @@
                 <div class="form-group">
                     <form:input type="text" class="form-control" name="userName" placeholder="Login" path="userName"/>
                     <i class="fa fa-user"></i>
-                </div>
-                <div class="form-group help">
-                    <form:input type="password" class="form-control" name="password" placeholder="Old Password"
-                                path="password"/>
-                    <i class="fa fa-lock"></i>
                 </div>
                 <div class="form-group help">
                     <form:input type="password" class="form-control" name="newPassword" placeholder="New Password"

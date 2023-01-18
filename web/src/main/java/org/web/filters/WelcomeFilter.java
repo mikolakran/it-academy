@@ -3,7 +3,6 @@ package org.web.filters;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +25,7 @@ public class WelcomeFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpSession session = request.getSession(false);
         UserForm userForm = (UserForm) session.getAttribute("userSession");
+        session.removeAttribute("userAndAdmin");
         String deleteIdTopic = request.getParameter("deleteIdTopic");
         if (userForm != null) {
             if ( deleteIdTopic != null) {

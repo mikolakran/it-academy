@@ -13,7 +13,6 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = "getAllPost",
                 query = "SELECT t FROM Post t where t.topic.id = : idTopic and t.user.id = : idUser"),
-        @NamedQuery(name = "getByPostName", query = "select p from Post p where p.name = :name")
 })
 public class Post implements Serializable {
     @Id

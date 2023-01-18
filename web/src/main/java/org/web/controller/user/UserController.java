@@ -4,6 +4,7 @@ import exception.MyException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,42 +15,25 @@ import validation.Validation;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/")
 public class UserController {
     @Autowired
     private UserFacade userFacade;
 
-    @GetMapping("/login")
-    public ModelAndView displayLogin() {
-        ModelAndView modelAndView = new ModelAndView("login");
-        UserForm userForm = new UserForm();
-        modelAndView.addObject(userForm);
-        return modelAndView;
+    @GetMapping("/")
+    public String home() {
+        return "home";
     }
 
-    @PostMapping("/login")
-    public ModelAndView getLogin(@ModelAttribute("userForm") UserForm userForm, HttpServletRequest request,
-                                 HttpServletResponse response) throws IOException {
-        ModelAndView modelAndView = new ModelAndView("welcome");
-        try {
-            UserForm resultSQLUserForm = userFacade.getByName(userForm.getUserName());
-            if (resultSQLUserForm.getPassword().equals(userForm.getPassword())) {
-                if (resultSQLUserForm.getPhoto().length == 0) {
-                    resultSQLUserForm.setPhoto(null);
-                }
-                request.getSession().setAttribute("userSession", resultSQLUserForm);
-                response.sendRedirect(request.getContextPath() + "/welcome");
-            } else {
-                modelAndView.setViewName("login");
-                modelAndView.addObject("userForm", new UserForm());
-                modelAndView.addObject("error", "password not exist");
-            }
-        } catch (MyException e) {
-            modelAndView.setViewName("login");
-            modelAndView.addObject("userForm", new UserForm());
-            modelAndView.addObject("error", e.getMessage());
+    @PostMapping("/loginS")
+    public void getLogin(@ModelAttribute("userForm") UserForm userForm,
+                         HttpServletRequest request,
+                         HttpServletResponse response) throws IOException {
+        UserForm resultSQLUserForm = userFacade.getByName(userForm.getUserName());
+        if (resultSQLUserForm.getPhoto() == null) {
+            resultSQLUserForm.setPhoto(null);
         }
-        return modelAndView;
+        request.getSession().setAttribute("userSession", resultSQLUserForm);
+        response.sendRedirect(request.getContextPath() + "/welcome");
     }
 
     @GetMapping("/addUser")
@@ -58,21 +42,20 @@ public class UserController {
         return userForm;
     }
 
+
     @PostMapping("/addUser")
     public ModelAndView addUser(HttpServletRequest request, HttpServletResponse response,
                                 @ModelAttribute("userForm") UserForm userForm) throws IOException {
         ModelAndView modelAndView = new ModelAndView("welcome");
-        if (userForm.getMultipartFile() != null) {
+        if (userForm.getMultipartFile().getBytes().length != 0) {
             userForm.setPhoto(userForm.getMultipartFile().getBytes());
         }
         try {
             new Validation.Builder().
                     validationPassSamePass2(userForm.getPassword(), userForm.getConfirmPassword()).build();
+            userForm.setPassword(BCrypt.hashpw(userForm.getPassword(), BCrypt.gensalt(12)));
             userFacade.getRole(userForm);
             UserForm save = userFacade.save(userForm);
-            if (save.getPhoto().length == 0) {
-                save.setPhoto(null);
-            }
             request.getSession().setAttribute("userSession", save);
             response.sendRedirect(request.getContextPath() + "/welcome");
         } catch (MyException e) {
@@ -86,13 +69,19 @@ public class UserController {
     @GetMapping("/upDateUser")
     public ModelAndView displayUpDate(@SessionAttribute() UserForm userSession,
                                       @RequestParam(value = "idKey", required = false, defaultValue = "0") Long idKey,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request,HttpServletResponse response) throws IOException {
         ModelAndView modelAndView = new ModelAndView("upDateUser");
         if (idKey != 0) {
             UserForm userForm = userFacade.get(idKey);
-            request.getSession().setAttribute("userAndAdmin", userForm);
-            modelAndView.addObject("userForm", userForm);
-            modelAndView.addObject("role", userSession.getRole());
+            if (userSession.getRole().equals("admin")) {
+                request.getSession().setAttribute("userAndAdmin", userForm);
+                modelAndView.addObject("userAndAdmin", userSession);
+                modelAndView.addObject("userForm", userForm);
+                modelAndView.addObject("role", userSession.getRole());
+            }else {
+                modelAndView.addObject("userForm", userSession);
+                response.sendRedirect(request.getContextPath() + "/logout");
+            }
         } else {
             modelAndView.addObject("userForm", userSession);
         }
@@ -166,12 +155,8 @@ public class UserController {
             }
             if (!userForm.getNewPassword().equals("")) {
                 if (!resultUserSQL.getPassword().equals(userForm.getNewPassword())) {
+                    userForm.setNewPassword(BCrypt.hashpw(userForm.getNewPassword(), BCrypt.gensalt(12)));
                     resultUserSQL.setPassword(userForm.getNewPassword());
-                    userFacade.update(resultUserSQL);
-                }
-            } else {
-                if (!resultUserSQL.getPassword().equals(userForm.getPassword())) {
-                    resultUserSQL.setPassword(userForm.getPassword());
                     userFacade.update(resultUserSQL);
                 }
             }
@@ -183,7 +168,7 @@ public class UserController {
                 resultUserSQL.setPhoto(userForm.getMultipartFile().getBytes());
                 userFacade.update(resultUserSQL);
             } else {
-                if (resultUserSQL.getPhoto().length==0) {
+                if (resultUserSQL.getPhoto() == null || resultUserSQL.getPhoto().length == 0) {
                     resultUserSQL.setPhoto(null);
                 }
             }

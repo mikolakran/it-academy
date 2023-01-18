@@ -1,53 +1,59 @@
 package dao.impl;
 
-import dao.BaseDAO;
 import dao.TopicDAO;
 import entity.Post;
 import entity.Topic;
 import entity.User;
 import exception.LoginException;
 import exception.MyException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import repository.TopicJpaRepository;
 
 import java.util.List;
 import java.util.Set;
 
 @Repository
 @Slf4j
-public class TopicDAOImpl extends BaseDAO<Topic, Long> implements TopicDAO {
+public class TopicDAOImpl implements TopicDAO {
 
-    public TopicDAOImpl() {
-        super();
-        aClass = Topic.class;
-    }
+    @Autowired
+    private TopicJpaRepository topicJpaRepository;
+
+    @PersistenceContext
+    @Getter
+    protected EntityManager entityManager;
 
     @Override
     public Topic save(Topic topic) throws MyException {
         log.trace("TopicDAOImpl.save(Topic topic) " + topic);
         validationSQLSave(topic.getNameTopic());
-        return super.save(topic);
+        return topicJpaRepository.save(topic);
     }
 
     @Override
     public Topic get(Long aLong) {
         log.trace("TopicDAOImpl.get(Long aLong) along = " + aLong);
-        return super.get(aLong);
+        return topicJpaRepository.findById(aLong).orElse(null);
     }
 
     @Override
     public void update(Topic topic) throws MyException {
         log.trace("TopicDAOImpl.update(Topic topic) topic = " + topic);
         validationSQLUpdate(topic.getNameTopic());
-        super.update(topic);
+        topicJpaRepository.save(topic);
     }
 
     @Override
     public void delete(Long aLong) {
         log.trace("TopicDAOImpl.delete(Long aLong) aLong = " + aLong);
-        super.delete(aLong);
+        topicJpaRepository.deleteById(aLong);
     }
 
     @Transactional
@@ -65,41 +71,25 @@ public class TopicDAOImpl extends BaseDAO<Topic, Long> implements TopicDAO {
     @Override
     public List<Topic> getListTopic() {
         log.trace("TopicDAOImpl.getListTopic()");
-        TypedQuery<Topic> typedQuery = entityManager.createNamedQuery("getAll", Topic.class);
-        return typedQuery.getResultList();
+        return topicJpaRepository.findAll();
     }
 
     @Override
     public Set<Topic> getListTopic(long id) {
         log.trace("TopicDAOImpl.getListTopic(long idUser)");
-        TypedQuery<User> typedQuery = entityManager.createNamedQuery("getAllTopic", User.class).
-                setParameter("id", id);
-        User user = typedQuery.getSingleResult();
-        return user.getTopic();
+        return topicJpaRepository.getListTopic(id).getTopic();
     }
 
     @Override
     public Set<User> getListUser(long id) {
         log.trace("TopicDAOImpl.getListTopic(long idTopic)");
-        TypedQuery<Topic> typedQuery = entityManager.createNamedQuery("getAllTopicUsers", Topic.class).
-                setParameter("id", id);
-        Topic topic = typedQuery.getSingleResult();
-        return topic.getUsers();
+        return topicJpaRepository.getListUser(id).getUsers();
     }
 
     @Override
     public Topic getByName(String name) {
-        Topic topic = null;
-        TypedQuery<Topic> typedQuery = entityManager.createNamedQuery("getByTopicName", Topic.class).
-                setParameter("name", name);
-        List<Topic> resultList = typedQuery.getResultList();
-        if (resultList.size() != 0) {
-            for (Topic topic1 : resultList) {
-                topic = topic1;
-            }
-        }
-        log.trace("TopicDAOImpl.getByName(String name) name = " + name + " topic = " + topic);
-        return topic;
+        log.trace("TopicDAOImpl.getByName(String name) name = " + name);
+        return topicJpaRepository.findByNameTopic(name);
     }
 
     private void validationSQLSave(String topicName) throws LoginException {

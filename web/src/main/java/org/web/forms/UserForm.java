@@ -22,6 +22,8 @@ public class UserForm implements Serializable {
     private MultipartFile multipartFile;
     private byte[] photo;
 
+    private String error;
+
     public UserForm(User user) {
         this.id = user.getId();
         this.userName = user.getUserName();

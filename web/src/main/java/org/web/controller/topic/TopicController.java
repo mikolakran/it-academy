@@ -18,6 +18,7 @@ import org.web.forms.UserForm;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Controller
 public class TopicController {
@@ -39,12 +40,17 @@ public class TopicController {
             Set<TopicForm> listAllTopic = topicFacade.getAll();
             Set<TopicForm> listUserTopic = topicFacade.getListTopic(userSession.getId());
             Set<TopicForm> topics = new HashSet<>();
+            AtomicBoolean isTopics = new AtomicBoolean(false);
             if (listAllTopic.size() != 0) {
                 listAllTopic.forEach(topic -> {
                     if (!listUserTopic.contains(topic)) {
                         topics.add(topic);
+                        isTopics.set(true);
                     }
                 });
+                if (!isTopics.get()){
+                    modelAndView.addObject("topicNull", "Topics null");
+                }
                 modelAndView.addObject("userForm", userSession);
                 modelAndView.addObject("topicForm", topicForm);
                 modelAndView.addObject("topics", topics);

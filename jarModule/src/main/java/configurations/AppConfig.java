@@ -7,24 +7,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:properties-config.properties")
 @ComponentScan(basePackages = { "dao"})
-@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = {"repository"})
 public class AppConfig {
 
     @Autowired
     private Environment environment;
     @Bean
-    public LocalContainerEntityManagerFactoryBean myEmf() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean lc = new LocalContainerEntityManagerFactoryBean();
         lc.setDataSource(dataSource());
         lc.setPackagesToScan("entity");
@@ -37,7 +37,7 @@ public class AppConfig {
     @Bean
     public JpaTransactionManager transactionManager() {
         JpaTransactionManager jTM = new JpaTransactionManager();
-        jTM.setEntityManagerFactory(myEmf().getObject());
+        jTM.setEntityManagerFactory(entityManagerFactory().getObject());
         return jTM;
     }
 

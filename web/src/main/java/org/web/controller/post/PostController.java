@@ -38,10 +38,10 @@ public class PostController {
 
     @GetMapping("/posts")
     public ModelAndView displayListTopicForm(
-            @SessionAttribute(value = "posts", required = false) Set<PostForm> postForms,
-            @SessionAttribute("userSession") UserForm userForm,
+            @SessionAttribute(value = "posts") Set<PostForm> postForms,
+            @SessionAttribute(value = "userSession") UserForm userForm,
             @ModelAttribute PostForm postForm,
-            @RequestParam(required = false) Long idTopic) {
+            @RequestParam Long idTopic) {
         ModelAndView modelAndView = new ModelAndView("posts");
         modelAndView.addObject("posts", postForms);
         if (idTopic != null) {
@@ -49,7 +49,7 @@ public class PostController {
             modelAndView.addObject(postForm);
             modelAndView.addObject(userForm);
         }
-        if (postForms == null) {
+        if (postForms.size() == 0) {
             modelAndView.addObject("postNull", "Post null");
         }
         return modelAndView;

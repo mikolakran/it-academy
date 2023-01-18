@@ -66,7 +66,7 @@ public class TopicDAOImplTest {
     @Test
     @Ignore
     public void get(){
-        Topic result = topicDAO.getByName(topic.getNameTopic());
+        Topic result = topicDAO.getByName(NAME);
         assertEquals(result.toString(),topicDAO.get(result.getId()).toString());
         assertNull(topicDAO.get(234L));
     }
@@ -74,7 +74,7 @@ public class TopicDAOImplTest {
     @Test
     @Ignore
     public void update() throws MyException {
-        User result = userDAO.getByName("Nikolai");
+        User result = userDAO.getByName("Nikolai4");
         Topic topic1 = topicDAO.getByName(NAME);
         Set<User> listUsers = userDAO.getListUsersWhereIdTopic(topic1.getId());
         listUsers.add(result);
